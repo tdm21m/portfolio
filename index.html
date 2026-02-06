@@ -3,57 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tanner Moehle — Portfolio</title>
-  <meta name="description" content="Personal portfolio showcasing creative work and projects.">
+  <title>Tanner Moehle — Product Designer</title>
+  <meta name="description" content="Product Designer specializing in collaboration systems, AI, and enterprise platforms.">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Inter Font -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
 
-  <!-- Tailwind Config (Meridian Design System) -->
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            gray: {
-              50: '#FAFAF9',
-              100: '#F5F5F4',
-              200: '#E7E5E4',
-              300: '#D6D3D1',
-              400: '#A8A29E',
-              500: '#78716C',
-              600: '#57534E',
-              700: '#44403C',
-              800: '#292524',
-              900: '#1C1917',
-              950: '#0C0A09',
+            // Warm neutrals
+            surface: {
+              50: '#FAFAF8',
+              100: '#F5F5F3',
+              200: '#EBEBEA',
+              300: '#DCDCDA',
+              400: '#B8B8B6',
+              500: '#8A8A88',
+              600: '#5C5C5A',
+              700: '#3D3D3C',
+              800: '#262625',
+              900: '#171716',
+              950: '#0D0D0C',
             },
-            teal: {
-              50: '#F0FDFA',
-              100: '#CCFBF1',
-              200: '#99F6E4',
-              300: '#5EEAD4',
-              400: '#2DD4BF',
-              500: '#14B8A6',
-              600: '#0D9488',
-              700: '#0F766E',
-              800: '#115E59',
-              900: '#134E4A',
-              950: '#042F2E',
-            },
+            // Muted accent (warm stone)
+            accent: {
+              DEFAULT: '#8B7355',
+              light: '#A68B6A',
+              dark: '#6B5A47',
+              muted: 'rgba(139, 115, 85, 0.12)',
+            }
           },
           fontFamily: {
-            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
           },
-          boxShadow: {
-            'teal': '0 4px 14px 0 rgb(20 184 166 / 0.35)',
-            'teal-lg': '0 8px 24px 0 rgb(20 184 166 / 0.4)',
+          fontSize: {
+            'display': ['4.5rem', { lineHeight: '1.05', letterSpacing: '-0.03em', fontWeight: '500' }],
+            'display-sm': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.025em', fontWeight: '500' }],
+            'title': ['1.75rem', { lineHeight: '1.3', letterSpacing: '-0.015em', fontWeight: '500' }],
+            'body-lg': ['1.125rem', { lineHeight: '1.7', fontWeight: '400' }],
+            'body': ['1rem', { lineHeight: '1.7', fontWeight: '400' }],
+            'caption': ['0.875rem', { lineHeight: '1.5', fontWeight: '450' }],
+            'micro': ['0.75rem', { lineHeight: '1.4', letterSpacing: '0.02em', fontWeight: '500' }],
+          },
+          spacing: {
+            '18': '4.5rem',
+            '22': '5.5rem',
+            '30': '7.5rem',
+          },
+          transitionTimingFunction: {
+            'smooth': 'cubic-bezier(0.22, 1, 0.36, 1)',
+            'bounce': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+          },
+          transitionDuration: {
+            '220': '220ms',
+            '260': '260ms',
           },
         },
       },
@@ -61,32 +72,62 @@
   </script>
 
   <style>
-    /* Base styles */
+    /* Base */
     html {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Focus visible */
-    :focus-visible {
-      outline: 2px solid #14B8A6;
-      outline-offset: 2px;
-    }
-    :focus:not(:focus-visible) {
-      outline: none;
+    body {
+      font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on;
     }
 
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+    /* Noise texture overlay */
+    .noise {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     }
 
-    /* Fade in animation */
-    @keyframes fadeInUp {
+    .dark .noise {
+      opacity: 0.04;
+    }
+
+    /* Cursor glow effect */
+    .cursor-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(
+        circle,
+        rgba(139, 115, 85, 0.06) 0%,
+        rgba(139, 115, 85, 0.02) 40%,
+        transparent 70%
+      );
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+    }
+
+    .dark .cursor-glow {
+      background: radial-gradient(
+        circle,
+        rgba(166, 139, 106, 0.08) 0%,
+        rgba(166, 139, 106, 0.03) 40%,
+        transparent 70%
+      );
+    }
+
+    /* Page entrance animation */
+    @keyframes fadeUp {
       from {
         opacity: 0;
         transform: translateY(20px);
@@ -97,365 +138,527 @@
       }
     }
 
-    .animate-fade-in-up {
-      animation: fadeInUp 0.6s ease-out forwards;
+    .animate-entrance {
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
-    .animate-delay-100 { animation-delay: 0.1s; opacity: 0; }
-    .animate-delay-200 { animation-delay: 0.2s; opacity: 0; }
-    .animate-delay-300 { animation-delay: 0.3s; opacity: 0; }
-    .animate-delay-400 { animation-delay: 0.4s; opacity: 0; }
+    .delay-100 { animation-delay: 0.1s; opacity: 0; }
+    .delay-200 { animation-delay: 0.2s; opacity: 0; }
+    .delay-300 { animation-delay: 0.3s; opacity: 0; }
+    .delay-400 { animation-delay: 0.4s; opacity: 0; }
+    .delay-500 { animation-delay: 0.5s; opacity: 0; }
 
-    /* Card hover effect */
-    .card-hover {
-      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    /* Project card hover effects */
+    .project-card {
+      transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .card-hover:hover {
+
+    .project-card:hover {
       transform: translateY(-4px);
     }
 
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .project-card .card-bg {
+      transition: background-color 220ms ease;
+    }
+
+    .project-card:hover .card-bg {
+      background-color: rgba(139, 115, 85, 0.04);
+    }
+
+    .dark .project-card:hover .card-bg {
+      background-color: rgba(166, 139, 106, 0.06);
+    }
+
+    .project-card .card-image {
+      transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .project-card:hover .card-image {
+      transform: scale(1.02) translateY(-2px);
+    }
+
+    .project-card .card-title {
+      transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .project-card:hover .card-title {
+      transform: translateX(2px);
+    }
+
+    .project-card .card-line {
+      width: 0;
+      transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .project-card:hover .card-line {
+      width: 24px;
+    }
+
+    .project-card .card-arrow {
+      opacity: 0;
+      transform: translateX(-8px);
+      transition:
+        opacity 180ms ease,
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .project-card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Nav link hover */
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: currentColor;
+      transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Focus states */
+    :focus-visible {
+      outline: 2px solid rgba(139, 115, 85, 0.5);
+      outline-offset: 2px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .cursor-glow { display: none; }
+    }
+
+    /* Selection */
+    ::selection {
+      background-color: rgba(139, 115, 85, 0.2);
+    }
+
+    /* Smooth scroll padding for nav */
+    section[id] {
+      scroll-margin-top: 100px;
     }
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans dark:bg-gray-950 dark:text-white transition-colors duration-300">
+<body class="bg-surface-50 text-surface-800 dark:bg-surface-950 dark:text-surface-200 transition-colors duration-300">
+
+  <!-- Noise overlay -->
+  <div class="noise"></div>
+
+  <!-- Cursor glow -->
+  <div class="cursor-glow" id="cursor-glow"></div>
 
   <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-gray-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="text-lg font-semibold text-gray-900 dark:text-white">
-        TM
-      </a>
-      <div class="flex items-center gap-6">
-        <a href="#work" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-          Work
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface-50/80 dark:bg-surface-950/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <a href="#" class="text-caption text-surface-700 dark:text-surface-300 font-medium tracking-wide">
+          Tanner Moehle
         </a>
-        <a href="#about" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-          About
-        </a>
-        <a href="#contact" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-          Contact
-        </a>
-        <!-- Dark mode toggle -->
-        <button
-          id="theme-toggle"
-          class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          aria-label="Toggle dark mode"
-        >
-          <!-- Sun icon (shown in dark mode) -->
-          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-          </svg>
-        </button>
+
+        <div class="flex items-center gap-8">
+          <div class="hidden sm:flex items-center gap-8">
+            <a href="#work" class="nav-link text-caption text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors">
+              Work
+            </a>
+            <a href="#about" class="nav-link text-caption text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors">
+              About
+            </a>
+            <a href="#" class="nav-link text-caption text-surface-500 dark:text-surface-500 hover:text-surface-900 dark:hover:text-surface-100 transition-colors">
+              Writing
+            </a>
+            <a href="#contact" class="nav-link text-caption text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors">
+              Contact
+            </a>
+          </div>
+
+          <!-- Theme toggle -->
+          <button
+            id="theme-toggle"
+            class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-400 hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+            aria-label="Toggle theme"
+          >
+            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="min-h-screen flex items-center pt-16">
-    <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
-      <div class="max-w-3xl">
-        <p class="text-teal-600 dark:text-teal-400 font-medium mb-4 animate-fade-in-up">
-          Hello, I'm
-        </p>
-        <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white leading-tight animate-fade-in-up animate-delay-100">
-          Tanner Moehle
-        </h1>
-        <p class="mt-6 text-xl md:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl animate-fade-in-up animate-delay-200">
-          I create thoughtful digital experiences that balance form and function.
-          Currently exploring the intersection of design and technology.
-        </p>
-        <div class="mt-10 flex flex-wrap gap-4 animate-fade-in-up animate-delay-300">
-          <a
-            href="#work"
-            class="inline-flex items-center justify-center px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-md shadow-sm hover:shadow-teal transition-all duration-200"
-          >
-            View my work
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </a>
-          <a
-            href="#contact"
-            class="inline-flex items-center justify-center px-6 py-3 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-md border border-gray-300 dark:border-gray-700 transition-all duration-200"
-          >
-            Get in touch
-          </a>
+  <main>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-20 lg:pt-0">
+      <div class="max-w-6xl mx-auto px-6 lg:px-8 py-20 lg:py-32">
+        <div class="max-w-4xl">
+          <!-- Label -->
+          <p class="text-micro uppercase tracking-widest text-surface-500 dark:text-surface-500 mb-6 animate-entrance">
+            Product Designer
+          </p>
+
+          <!-- Name -->
+          <h1 class="text-display-sm md:text-display text-surface-900 dark:text-surface-100 mb-8 animate-entrance delay-100">
+            Tanner Moehle
+          </h1>
+
+          <!-- Title -->
+          <p class="text-title text-surface-600 dark:text-surface-400 mb-12 animate-entrance delay-200">
+            Collaboration Systems, AI, and Enterprise Platforms
+          </p>
+
+          <!-- Bio -->
+          <div class="max-w-2xl space-y-6 animate-entrance delay-300">
+            <p class="text-body-lg text-surface-700 dark:text-surface-300">
+              I design the systems that shape how people collaborate, create, and decide.
+            </p>
+            <p class="text-body text-surface-600 dark:text-surface-400">
+              My career spans visual design, field research, startups, and enterprise platforms—evolving from craft to large-scale product architecture. At Microsoft Teams, I designed interaction systems used by hundreds of millions of people, including real-time notification frameworks, spatial meeting experiences, and group collaboration tools.
+            </p>
+            <p class="text-body text-surface-600 dark:text-surface-400">
+              Today, I work at the intersection of AI, enterprise software, and design systems, exploring how humans and machines collaborate at scale.
+            </p>
+          </div>
+
+          <!-- Scroll indicator -->
+          <div class="mt-20 animate-entrance delay-500">
+            <a href="#work" class="inline-flex items-center gap-3 text-caption text-surface-500 hover:text-surface-700 dark:hover:text-surface-300 transition-colors group">
+              <span>View selected work</span>
+              <svg class="w-4 h-4 transform group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Work Section -->
-  <section id="work" class="py-24 md:py-32 bg-white dark:bg-gray-900">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="mb-16">
-        <p class="text-teal-600 dark:text-teal-400 font-medium mb-2">Portfolio</p>
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-          Selected Work
-        </h2>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-8">
-        <!-- Project 1 -->
-        <article class="group card-hover">
-          <div class="aspect-[4/3] bg-gradient-to-br from-teal-100 to-teal-200 dark:from-teal-900 dark:to-teal-800 rounded-xl overflow-hidden mb-6 flex items-center justify-center">
-            <div class="w-3/4 h-3/4 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center">
-              <span class="text-4xl">🎨</span>
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-            Design System
-          </h3>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">
-            A comprehensive design system built for scalability and consistency across digital products.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              Design
-            </span>
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              Systems
-            </span>
-          </div>
-        </article>
-
-        <!-- Project 2 -->
-        <article class="group card-hover">
-          <div class="aspect-[4/3] bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-xl overflow-hidden mb-6 flex items-center justify-center">
-            <div class="w-3/4 h-3/4 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center">
-              <span class="text-4xl">📱</span>
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-            Mobile App
-          </h3>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">
-            A thoughtfully crafted mobile experience focused on simplicity and user delight.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              Mobile
-            </span>
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              UX
-            </span>
-          </div>
-        </article>
-
-        <!-- Project 3 -->
-        <article class="group card-hover">
-          <div class="aspect-[4/3] bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900 dark:to-amber-800 rounded-xl overflow-hidden mb-6 flex items-center justify-center">
-            <div class="w-3/4 h-3/4 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center">
-              <span class="text-4xl">🌐</span>
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-            Web Platform
-          </h3>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">
-            A modern web platform designed to streamline workflows and boost productivity.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              Web
-            </span>
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              SaaS
-            </span>
-          </div>
-        </article>
-
-        <!-- Project 4 -->
-        <article class="group card-hover">
-          <div class="aspect-[4/3] bg-gradient-to-br from-rose-100 to-rose-200 dark:from-rose-900 dark:to-rose-800 rounded-xl overflow-hidden mb-6 flex items-center justify-center">
-            <div class="w-3/4 h-3/4 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center">
-              <span class="text-4xl">✨</span>
-            </div>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
-            Brand Identity
-          </h3>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">
-            Complete brand identity system including logo, typography, and visual guidelines.
-          </p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              Branding
-            </span>
-            <span class="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
-              Identity
-            </span>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="py-24 md:py-32 bg-gray-50 dark:bg-gray-950">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="grid md:grid-cols-2 gap-16 items-center">
-        <div>
-          <p class="text-teal-600 dark:text-teal-400 font-medium mb-2">About</p>
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-            A bit about me
+    <!-- Work Section -->
+    <section id="work" class="py-24 lg:py-32">
+      <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <!-- Section header -->
+        <div class="mb-16 lg:mb-24">
+          <p class="text-micro uppercase tracking-widest text-surface-500 mb-3">Selected Work</p>
+          <h2 class="text-title text-surface-900 dark:text-surface-100">
+            Systems designed for scale
           </h2>
-          <div class="space-y-4 text-gray-600 dark:text-gray-400 leading-relaxed">
-            <p>
-              I'm a designer and creative technologist passionate about crafting digital experiences that feel inevitable — as if no other solution was ever possible.
-            </p>
-            <p>
-              My approach combines deep empathy for users with a relentless pursuit of simplicity. I believe the best interfaces are the ones you never notice.
-            </p>
-            <p>
-              When I'm not designing, you'll find me exploring new technologies, reading about cognitive psychology, or seeking inspiration in architecture and nature.
-            </p>
-          </div>
-          <div class="mt-8 flex flex-wrap gap-3">
-            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
-              UI/UX Design
-            </span>
-            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
-              Design Systems
-            </span>
-            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
-              Prototyping
-            </span>
-            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300">
-              Front-end
-            </span>
-          </div>
         </div>
-        <div class="relative">
-          <div class="aspect-square bg-gradient-to-br from-teal-100 to-teal-200 dark:from-teal-900 dark:to-teal-800 rounded-2xl flex items-center justify-center">
-            <div class="w-32 h-32 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center">
-              <span class="text-6xl">👋</span>
+
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+
+          <!-- Microsoft Teams - Large -->
+          <article class="project-card group cursor-pointer md:col-span-2 lg:col-span-1 lg:row-span-2">
+            <div class="card-bg h-full rounded-2xl lg:rounded-3xl border border-surface-200 dark:border-surface-800 p-6 lg:p-8 bg-white dark:bg-surface-900">
+              <!-- Image placeholder -->
+              <div class="card-image aspect-[4/3] lg:aspect-[3/2] rounded-xl lg:rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-900 mb-6 lg:mb-8 flex items-center justify-center overflow-hidden">
+                <div class="w-2/3 h-2/3 bg-white/80 dark:bg-surface-800/80 backdrop-blur rounded-lg shadow-lg flex items-center justify-center">
+                  <svg class="w-12 h-12 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="card-title text-title text-surface-900 dark:text-surface-100">
+                    Microsoft Teams
+                  </h3>
+                  <div class="card-line h-px bg-accent"></div>
+                  <svg class="card-arrow w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"></path>
+                  </svg>
+                </div>
+
+                <p class="text-body text-surface-600 dark:text-surface-400">
+                  Designing the interaction systems that power hybrid collaboration at global scale.
+                </p>
+
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Notifications</span>
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Together Mode</span>
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Breakout Rooms</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <!-- Decorative element -->
-          <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-teal-500/10 dark:bg-teal-400/10 rounded-full blur-2xl"></div>
+          </article>
+
+          <!-- Decisions -->
+          <article class="project-card group cursor-pointer">
+            <div class="card-bg h-full rounded-2xl lg:rounded-3xl border border-surface-200 dark:border-surface-800 p-6 lg:p-8 bg-white dark:bg-surface-900">
+              <div class="card-image aspect-[4/3] rounded-xl lg:rounded-2xl bg-gradient-to-br from-violet-50 to-purple-100 dark:from-violet-950 dark:to-purple-900 mb-6 flex items-center justify-center overflow-hidden">
+                <div class="w-2/3 h-2/3 bg-white/80 dark:bg-surface-800/80 backdrop-blur rounded-lg shadow-lg flex items-center justify-center">
+                  <svg class="w-10 h-10 text-violet-600 dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="card-title text-title text-surface-900 dark:text-surface-100">Decisions</h3>
+                  <div class="card-line h-px bg-accent"></div>
+                  <svg class="card-arrow w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"></path>
+                  </svg>
+                </div>
+                <p class="text-body text-surface-600 dark:text-surface-400">
+                  Turning meetings into intelligent decision systems.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">AI Intelligence</span>
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Meeting Minutes</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Mara -->
+          <article class="project-card group cursor-pointer">
+            <div class="card-bg h-full rounded-2xl lg:rounded-3xl border border-surface-200 dark:border-surface-800 p-6 lg:p-8 bg-white dark:bg-surface-900">
+              <div class="card-image aspect-[4/3] rounded-xl lg:rounded-2xl bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-950 dark:to-orange-900 mb-6 flex items-center justify-center overflow-hidden">
+                <div class="w-2/3 h-2/3 bg-white/80 dark:bg-surface-800/80 backdrop-blur rounded-lg shadow-lg flex items-center justify-center">
+                  <svg class="w-10 h-10 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="card-title text-title text-surface-900 dark:text-surface-100">Mara</h3>
+                  <div class="card-line h-px bg-accent"></div>
+                  <svg class="card-arrow w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"></path>
+                  </svg>
+                </div>
+                <p class="text-body text-surface-600 dark:text-surface-400">
+                  Designing products grounded in real human behavior.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Field Research</span>
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Fintech</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- EA Games -->
+          <article class="project-card group cursor-pointer">
+            <div class="card-bg h-full rounded-2xl lg:rounded-3xl border border-surface-200 dark:border-surface-800 p-6 lg:p-8 bg-white dark:bg-surface-900">
+              <div class="card-image aspect-[4/3] rounded-xl lg:rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-emerald-950 dark:to-teal-900 mb-6 flex items-center justify-center overflow-hidden">
+                <div class="w-2/3 h-2/3 bg-white/80 dark:bg-surface-800/80 backdrop-blur rounded-lg shadow-lg flex items-center justify-center">
+                  <svg class="w-10 h-10 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="card-title text-title text-surface-900 dark:text-surface-100">EA Games</h3>
+                  <div class="card-line h-px bg-accent"></div>
+                  <svg class="card-arrow w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"></path>
+                  </svg>
+                </div>
+                <p class="text-body text-surface-600 dark:text-surface-400">
+                  Building product systems inside shifting brand ecosystems.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">UI Systems</span>
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Iconography</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- IBM -->
+          <article class="project-card group cursor-pointer">
+            <div class="card-bg h-full rounded-2xl lg:rounded-3xl border border-surface-200 dark:border-surface-800 p-6 lg:p-8 bg-white dark:bg-surface-900">
+              <div class="card-image aspect-[4/3] rounded-xl lg:rounded-2xl bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-950 dark:to-gray-900 mb-6 flex items-center justify-center overflow-hidden">
+                <div class="w-2/3 h-2/3 bg-white/80 dark:bg-surface-800/80 backdrop-blur rounded-lg shadow-lg flex items-center justify-center">
+                  <svg class="w-10 h-10 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="card-title text-title text-surface-900 dark:text-surface-100">IBM</h3>
+                  <div class="card-line h-px bg-accent"></div>
+                  <svg class="card-arrow w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"></path>
+                  </svg>
+                </div>
+                <p class="text-body text-surface-600 dark:text-surface-400">
+                  Scaling UX inside global enterprise platforms.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Blueworks Live</span>
+                  <span class="text-micro text-surface-500 bg-surface-100 dark:bg-surface-800 px-3 py-1 rounded-full">Enterprise UX</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="py-24 md:py-32 bg-white dark:bg-gray-900">
-    <div class="max-w-5xl mx-auto px-6">
-      <div class="max-w-2xl mx-auto text-center">
-        <p class="text-teal-600 dark:text-teal-400 font-medium mb-2">Contact</p>
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          Let's work together
-        </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 mb-10">
-          Have a project in mind? I'd love to hear about it. Send me a message and let's create something great together.
-        </p>
+    <!-- About Section -->
+    <section id="about" class="py-24 lg:py-32 bg-surface-100/50 dark:bg-surface-900/50">
+      <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          <!-- Left column -->
+          <div>
+            <p class="text-micro uppercase tracking-widest text-surface-500 mb-3">About</p>
+            <h2 class="text-display-sm text-surface-900 dark:text-surface-100 mb-8">
+              Designing systems,<br>not screens.
+            </h2>
+          </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <!-- Right column -->
+          <div class="space-y-8">
+            <div class="space-y-6">
+              <p class="text-body-lg text-surface-700 dark:text-surface-300">
+                My path through design has been unconventional: from art direction to brand systems, from field research in Lagos to enterprise platforms at Microsoft.
+              </p>
+              <p class="text-body text-surface-600 dark:text-surface-400">
+                Each transition deepened my understanding that great products aren't designed in isolation—they emerge from systems thinking, deep user empathy, and cross-functional collaboration.
+              </p>
+              <p class="text-body text-surface-600 dark:text-surface-400">
+                Today, I focus on the intersection of AI and human collaboration: how do we design systems that augment human decision-making rather than replace it? How do we scale enterprise software without losing the craft?
+              </p>
+            </div>
+
+            <!-- Focus areas -->
+            <div class="pt-8 border-t border-surface-200 dark:border-surface-800">
+              <p class="text-micro uppercase tracking-widest text-surface-500 mb-6">Focus Areas</p>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-3">
+                  <p class="text-caption text-surface-800 dark:text-surface-200">Design Systems</p>
+                  <p class="text-caption text-surface-800 dark:text-surface-200">AI Product Design</p>
+                  <p class="text-caption text-surface-800 dark:text-surface-200">Enterprise UX</p>
+                </div>
+                <div class="space-y-3">
+                  <p class="text-caption text-surface-800 dark:text-surface-200">Research Leadership</p>
+                  <p class="text-caption text-surface-800 dark:text-surface-200">Workshop Facilitation</p>
+                  <p class="text-caption text-surface-800 dark:text-surface-200">Cross-org Collaboration</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 lg:py-32">
+      <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="max-w-2xl">
+          <p class="text-micro uppercase tracking-widest text-surface-500 mb-3">Get in touch</p>
+          <h2 class="text-display-sm text-surface-900 dark:text-surface-100 mb-8">
+            Let's build something meaningful.
+          </h2>
+          <p class="text-body-lg text-surface-600 dark:text-surface-400 mb-10">
+            I'm always interested in connecting with people working on interesting problems in collaboration, AI, and enterprise software.
+          </p>
+
           <a
             href="mailto:tmoehle@mac.com"
-            class="inline-flex items-center justify-center px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg shadow-sm hover:shadow-teal transition-all duration-200 text-lg"
+            class="inline-flex items-center gap-3 px-6 py-4 bg-surface-900 dark:bg-surface-100 text-surface-50 dark:text-surface-900 rounded-xl font-medium text-caption hover:bg-surface-800 dark:hover:bg-surface-200 transition-colors group"
           >
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            Send me an email
-          </a>
-        </div>
-
-        <!-- Social links -->
-        <div class="mt-12 flex justify-center gap-6">
-          <a
-            href="#"
-            class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-teal-50 hover:text-teal-600 dark:hover:bg-teal-900/50 dark:hover:text-teal-400 transition-colors"
-            aria-label="Twitter"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-            </svg>
-          </a>
-          <a
-            href="#"
-            class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-teal-50 hover:text-teal-600 dark:hover:bg-teal-900/50 dark:hover:text-teal-400 transition-colors"
-            aria-label="LinkedIn"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
-            </svg>
-          </a>
-          <a
-            href="#"
-            class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-teal-50 hover:text-teal-600 dark:hover:bg-teal-900/50 dark:hover:text-teal-400 transition-colors"
-            aria-label="GitHub"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
-            </svg>
-          </a>
-          <a
-            href="#"
-            class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-teal-50 hover:text-teal-600 dark:hover:bg-teal-900/50 dark:hover:text-teal-400 transition-colors"
-            aria-label="Dribbble"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308 2.3-1.555 3.936-4.02 4.392-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4 1.73 1.358 3.92 2.166 6.29 2.166 1.42 0 2.77-.29 4-.814zm-11.62-2.58c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74C7.17 11.775 2.206 11.71 1.756 11.7l-.004.312c0 2.633.998 5.037 2.634 6.855zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17zM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702-1.81-1.61-4.19-2.586-6.795-2.586-.825 0-1.63.1-2.4.285zm10.335 3.483c-.218.29-1.935 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33-.02-2.42-.88-4.64-2.31-6.38z"></path>
+            <span>tmoehle@mac.com</span>
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
             </svg>
           </a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- Footer -->
-  <footer class="py-8 bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
-    <div class="max-w-5xl mx-auto px-6">
+  <footer class="py-8 border-t border-surface-200 dark:border-surface-800">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
       <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <p class="text-sm text-gray-500 dark:text-gray-500">
-          © 2026 Tanner Moehle. All rights reserved.
+        <p class="text-micro text-surface-500">
+          © 2026 Tanner Moehle
         </p>
-        <p class="text-sm text-gray-500 dark:text-gray-500">
-          Built with the <span class="text-teal-600 dark:text-teal-400">Meridian</span> design system
-        </p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-micro text-surface-500 hover:text-surface-700 dark:hover:text-surface-300 transition-colors">
+            LinkedIn
+          </a>
+          <a href="#" class="text-micro text-surface-500 hover:text-surface-700 dark:hover:text-surface-300 transition-colors">
+            Twitter
+          </a>
+        </div>
       </div>
     </div>
   </footer>
 
-  <!-- Dark mode script -->
   <script>
-    // Check for saved theme preference or system preference
-    const getThemePreference = () => {
+    // Cursor glow effect
+    const cursorGlow = document.getElementById('cursor-glow');
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateGlow() {
+      glowX += (mouseX - glowX) * 0.1;
+      glowY += (mouseY - glowY) * 0.1;
+      cursorGlow.style.left = glowX + 'px';
+      cursorGlow.style.top = glowY + 'px';
+      requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
+
+    // Theme toggle
+    const getTheme = () => {
       const saved = localStorage.getItem('theme');
       if (saved) return saved;
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
 
-    // Apply theme
     const setTheme = (theme) => {
       document.documentElement.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('theme', theme);
     };
 
-    // Initialize
-    setTheme(getThemePreference());
+    setTheme(getTheme());
 
-    // Toggle button
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
       setTheme(current === 'dark' ? 'light' : 'dark');
     });
 
-    // Listen for system changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       if (!localStorage.getItem('theme')) {
         setTheme(e.matches ? 'dark' : 'light');
