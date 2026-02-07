@@ -153,10 +153,11 @@
   <nav class="fixed top-0 left-0 right-0 z-50 bg-surface-50/90 dark:bg-surface-950/90 backdrop-blur-sm">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6">
       <div class="flex items-center justify-between h-14">
-        <!-- Logo / Home -->
-        <a href="#" class="text-sm text-surface-600 dark:text-surface-400 hover:text-surface-900 dark:hover:text-surface-100 transition-colors">
+        <!-- Contact -->
+        <a href="mailto:tmoehle@mac.com" class="text-surface-500 dark:text-surface-400 hover:text-surface-800 dark:hover:text-surface-200 transition-colors">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 6-10 7L2 6"/>
           </svg>
         </a>
 
@@ -212,16 +213,16 @@
         <!-- Theme Toggle -->
         <button
           id="theme-toggle"
-          class="w-8 h-8 flex items-center justify-center rounded-full text-surface-500 dark:text-surface-400 hover:text-surface-800 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all"
+          class="text-surface-500 dark:text-surface-400 hover:text-surface-800 dark:hover:text-surface-200 transition-colors"
           aria-label="Toggle theme"
         >
           <!-- Sun icon (shown in dark mode) -->
-          <svg class="w-4.5 h-4.5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="5" stroke-width="1.5"/>
             <path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
           </svg>
           <!-- Moon icon (shown in light mode) -->
-          <svg class="w-4.5 h-4.5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
           </svg>
         </button>
