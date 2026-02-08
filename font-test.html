@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Pairing Test — Tanner Moehle</title>
+
+  <!-- All Font Options -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&family=DM+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              50: '#FAFAFA', 100: '#F5F5F5', 150: '#EFEFEF', 200: '#E5E5E5',
+              300: '#D4D4D4', 400: '#A3A3A3', 500: '#737373', 600: '#525252',
+              700: '#404040', 800: '#262626', 900: '#171717', 950: '#0A0A0A',
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    .font-geist { font-family: 'Geist Sans', system-ui, sans-serif; }
+    .font-inter { font-family: 'Inter', system-ui, sans-serif; }
+    .font-space { font-family: 'Space Grotesk', system-ui, sans-serif; }
+    .font-dm { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-jakarta { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .font-mono { font-family: 'Geist Mono', monospace; }
+
+    .card {
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .active-font {
+      ring: 2px;
+      ring-color: #4F46E5;
+    }
+  </style>
+</head>
+
+<body class="bg-surface-100 text-surface-800 min-h-screen py-12 px-6">
+
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-3xl font-semibold text-surface-900 mb-2">Font Pairing Comparison</h1>
+      <p class="text-surface-500">Click any card to see it applied to your homepage preview below</p>
+    </div>
+
+    <!-- Font Options Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+
+      <!-- Geist Sans -->
+      <button onclick="setFont('geist')" class="card text-left bg-white rounded-2xl p-6 border-2 border-surface-150 hover:border-indigo-300" id="card-geist">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-surface-400">Option 1</span>
+          <span class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">Current</span>
+        </div>
+        <h2 class="font-geist text-2xl font-semibold text-surface-900 mb-2">Geist Sans</h2>
+        <p class="font-geist text-sm text-surface-600 leading-relaxed mb-4">
+          Vercel's modern geometric sans-serif. Clean, technical, and contemporary.
+        </p>
+        <div class="font-geist space-y-1 text-surface-500">
+          <p class="text-lg font-medium">Tanner Moehle</p>
+          <p class="text-sm">Product designer at Microsoft</p>
+          <p class="text-xs">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </button>
+
+      <!-- Inter -->
+      <button onclick="setFont('inter')" class="card text-left bg-white rounded-2xl p-6 border-2 border-surface-150 hover:border-indigo-300" id="card-inter">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-surface-400">Option 2</span>
+          <span class="text-xs bg-surface-100 text-surface-500 px-2 py-1 rounded-full">Classic</span>
+        </div>
+        <h2 class="font-inter text-2xl font-semibold text-surface-900 mb-2">Inter</h2>
+        <p class="font-inter text-sm text-surface-600 leading-relaxed mb-4">
+          The industry standard for UI. Highly legible and universally loved.
+        </p>
+        <div class="font-inter space-y-1 text-surface-500">
+          <p class="text-lg font-medium">Tanner Moehle</p>
+          <p class="text-sm">Product designer at Microsoft</p>
+          <p class="text-xs">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </button>
+
+      <!-- Space Grotesk -->
+      <button onclick="setFont('space')" class="card text-left bg-white rounded-2xl p-6 border-2 border-surface-150 hover:border-indigo-300" id="card-space">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-surface-400">Option 3</span>
+          <span class="text-xs bg-emerald-100 text-emerald-600 px-2 py-1 rounded-full">Bold</span>
+        </div>
+        <h2 class="font-space text-2xl font-semibold text-surface-900 mb-2">Space Grotesk</h2>
+        <p class="font-space text-sm text-surface-600 leading-relaxed mb-4">
+          Geometric with personality. Great for tech-forward portfolios.
+        </p>
+        <div class="font-space space-y-1 text-surface-500">
+          <p class="text-lg font-medium">Tanner Moehle</p>
+          <p class="text-sm">Product designer at Microsoft</p>
+          <p class="text-xs">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </button>
+
+      <!-- DM Sans -->
+      <button onclick="setFont('dm')" class="card text-left bg-white rounded-2xl p-6 border-2 border-surface-150 hover:border-indigo-300" id="card-dm">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-surface-400">Option 4</span>
+          <span class="text-xs bg-amber-100 text-amber-600 px-2 py-1 rounded-full">Warm</span>
+        </div>
+        <h2 class="font-dm text-2xl font-semibold text-surface-900 mb-2">DM Sans</h2>
+        <p class="font-dm text-sm text-surface-600 leading-relaxed mb-4">
+          Friendly and approachable. Softer geometric with open counters.
+        </p>
+        <div class="font-dm space-y-1 text-surface-500">
+          <p class="text-lg font-medium">Tanner Moehle</p>
+          <p class="text-sm">Product designer at Microsoft</p>
+          <p class="text-xs">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </button>
+
+      <!-- Plus Jakarta Sans -->
+      <button onclick="setFont('jakarta')" class="card text-left bg-white rounded-2xl p-6 border-2 border-surface-150 hover:border-indigo-300" id="card-jakarta">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-surface-400">Option 5</span>
+          <span class="text-xs bg-violet-100 text-violet-600 px-2 py-1 rounded-full">Premium</span>
+        </div>
+        <h2 class="font-jakarta text-2xl font-semibold text-surface-900 mb-2">Plus Jakarta Sans</h2>
+        <p class="font-jakarta text-sm text-surface-600 leading-relaxed mb-4">
+          Modern elegance. Popular with design portfolios and SaaS.
+        </p>
+        <div class="font-jakarta space-y-1 text-surface-500">
+          <p class="text-lg font-medium">Tanner Moehle</p>
+          <p class="text-sm">Product designer at Microsoft</p>
+          <p class="text-xs">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </button>
+
+      <!-- Geist Mono -->
+      <button onclick="setFont('mono')" class="card text-left bg-white rounded-2xl p-6 border-2 border-surface-150 hover:border-indigo-300" id="card-mono">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-surface-400">Option 6</span>
+          <span class="text-xs bg-rose-100 text-rose-600 px-2 py-1 rounded-full">Technical</span>
+        </div>
+        <h2 class="font-mono text-2xl font-semibold text-surface-900 mb-2">Geist Mono</h2>
+        <p class="font-mono text-sm text-surface-600 leading-relaxed mb-4">
+          Monospace for a developer/technical aesthetic. Very distinctive.
+        </p>
+        <div class="font-mono space-y-1 text-surface-500">
+          <p class="text-lg font-medium">Tanner Moehle</p>
+          <p class="text-sm">Product designer at Microsoft</p>
+          <p class="text-xs">ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        </div>
+      </button>
+
+    </div>
+
+    <!-- Live Preview -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-surface-900">Live Preview</h2>
+        <span class="text-sm text-surface-500">Currently showing: <span id="current-font" class="font-medium text-indigo-600">Geist Sans</span></span>
+      </div>
+    </div>
+
+    <!-- Homepage Preview -->
+    <div class="bg-surface-50 rounded-3xl border border-surface-200 overflow-hidden">
+
+      <!-- Nav Preview -->
+      <div class="bg-white/90 backdrop-blur-sm border-b border-surface-100 px-6 py-4">
+        <div class="flex items-center justify-between">
+          <svg class="w-5 h-5 text-surface-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 6-10 7L2 6"/>
+          </svg>
+          <span id="preview-nav" class="font-geist text-xs text-surface-400 tracking-wide">Selected work ↓</span>
+          <svg class="w-5 h-5 text-surface-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Content Preview -->
+      <div class="p-8 grid lg:grid-cols-[1fr,1.5fr] gap-6">
+
+        <!-- Bio Card Preview -->
+        <div class="bg-white rounded-2xl p-6 border border-surface-150">
+          <h1 id="preview-name" class="font-geist text-xl font-medium text-surface-900 mb-1">Tanner Moehle</h1>
+          <p id="preview-title" class="font-geist text-base text-surface-500 mb-6">
+            Product designer at <span class="text-surface-700 font-medium">Microsoft</span>
+          </p>
+          <div id="preview-bio" class="font-geist space-y-4 text-sm text-surface-600 leading-relaxed">
+            <p>I design the systems that shape how people collaborate, create, and decide.</p>
+            <p>My career spans visual design, field research, startups, and enterprise platforms—evolving from craft to large-scale product architecture.</p>
+          </div>
+          <div class="mt-6 pt-6 border-t border-surface-100 flex items-center gap-6">
+            <span id="preview-link1" class="font-geist text-sm text-surface-500">LinkedIn</span>
+            <span id="preview-link2" class="font-geist text-sm text-surface-500">Twitter</span>
+            <span id="preview-link3" class="font-geist text-sm text-surface-500">Email</span>
+          </div>
+        </div>
+
+        <!-- Grid Preview -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="col-span-2 row-span-2 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-4 flex items-end">
+            <div>
+              <p id="preview-card1" class="font-geist text-sm font-medium text-surface-800">Microsoft Teams</p>
+              <p id="preview-card1-sub" class="font-geist text-xs text-surface-500">Collaboration at scale</p>
+            </div>
+          </div>
+          <div class="bg-gradient-to-br from-violet-50 to-purple-100 rounded-2xl p-3 flex items-end">
+            <p id="preview-card2" class="font-geist text-xs font-medium text-surface-800">Decisions</p>
+          </div>
+          <div class="bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl p-3 flex items-end">
+            <p id="preview-card3" class="font-geist text-xs font-medium text-surface-800">Mara</p>
+          </div>
+          <div class="col-span-2 bg-gradient-to-br from-emerald-50 to-teal-100 rounded-2xl p-3 flex items-end">
+            <p id="preview-card4" class="font-geist text-xs font-medium text-surface-800">EA Games</p>
+          </div>
+          <div class="bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl p-3 flex items-end">
+            <p id="preview-card5" class="font-geist text-xs font-medium text-surface-800">IBM</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const fontNames = {
+      'geist': 'Geist Sans',
+      'inter': 'Inter',
+      'space': 'Space Grotesk',
+      'dm': 'DM Sans',
+      'jakarta': 'Plus Jakarta Sans',
+      'mono': 'Geist Mono'
+    };
+
+    const fontClasses = {
+      'geist': 'font-geist',
+      'inter': 'font-inter',
+      'space': 'font-space',
+      'dm': 'font-dm',
+      'jakarta': 'font-jakarta',
+      'mono': 'font-mono'
+    };
+
+    function setFont(font) {
+      const fontClass = fontClasses[font];
+      const fontName = fontNames[font];
+
+      // Update all preview elements
+      const previewElements = [
+        'preview-nav', 'preview-name', 'preview-title', 'preview-bio',
+        'preview-link1', 'preview-link2', 'preview-link3',
+        'preview-card1', 'preview-card1-sub', 'preview-card2',
+        'preview-card3', 'preview-card4', 'preview-card5'
+      ];
+
+      previewElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          // Remove all font classes
+          Object.values(fontClasses).forEach(fc => el.classList.remove(fc));
+          // Add new font class
+          el.classList.add(fontClass);
+        }
+      });
+
+      // Update current font display
+      document.getElementById('current-font').textContent = fontName;
+
+      // Update card borders
+      Object.keys(fontClasses).forEach(f => {
+        const card = document.getElementById('card-' + f);
+        if (card) {
+          if (f === font) {
+            card.classList.remove('border-surface-150');
+            card.classList.add('border-indigo-400', 'ring-2', 'ring-indigo-100');
+          } else {
+            card.classList.add('border-surface-150');
+            card.classList.remove('border-indigo-400', 'ring-2', 'ring-indigo-100');
+          }
+        }
+      });
+    }
+
+    // Set default
+    setFont('geist');
+  </script>
+
+</body>
+</html>
