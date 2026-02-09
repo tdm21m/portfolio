@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#171717">
+        <animate attributeName="stop-color" values="#171717;#1f1f1f;#171717" dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#262626">
+        <animate attributeName="stop-color" values="#262626;#171717;#262626" dur="3s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FAFAFA">
+        <animate attributeName="stop-color" values="#FAFAFA;#A3A3A3;#FAFAFA" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#E5E5E5">
+        <animate attributeName="stop-color" values="#E5E5E5;#FAFAFA;#E5E5E5" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#D4D4D4">
+        <animate attributeName="stop-color" values="#D4D4D4;#FAFAFA;#D4D4D4" dur="2s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="url(#bgGrad)"/>
+  <text x="16" y="22" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="url(#textGrad)" text-anchor="middle">TM</text>
+</svg>
