@@ -225,6 +225,21 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
+    /* ===== 0. TYPEWRITER SCRAMBLE HYBRID ===== */
+    .typewriter-cursor {
+      animation: cursor-blink 0.7s step-end infinite;
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .typewriter-char {
+      display: inline-block;
+      min-width: 0.6em;
+    }
+
     /* Demo card styles */
     .demo-card {
       background: white;
@@ -255,6 +270,21 @@
 
     <!-- Animation Grid -->
     <div class="grid gap-8">
+
+      <!-- 0. Typewriter + Scramble Hybrid -->
+      <div class="demo-card dark" style="border: 2px solid #4ade80;">
+        <p class="font-geist text-xs uppercase tracking-widest text-emerald-400 mb-4">⭐ Featured — Typewriter Decode</p>
+        <div class="overflow-hidden flex items-center">
+          <h2 class="font-pixel text-2xl text-white" id="typewriter-scramble">
+            <!-- Filled by JS -->
+          </h2>
+          <span class="typewriter-cursor text-emerald-400 text-2xl font-pixel ml-0.5">_</span>
+        </div>
+        <button onclick="playTypewriterScramble()" class="mt-4 font-geist text-xs bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors">
+          Replay Animation
+        </button>
+        <p class="font-geist text-sm text-surface-400 mt-4">Hybrid: typewriter reveal with scramble decode on each character. Best of both worlds.</p>
+      </div>
 
       <!-- 1. Typewriter -->
       <div class="demo-card">
@@ -380,6 +410,44 @@
   </div>
 
   <script>
+    // Typewriter + Scramble Hybrid
+    function playTypewriterScramble() {
+      const finalText = "TANNER MOEHLE";
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
+      const container = document.getElementById('typewriter-scramble');
+      container.innerHTML = '';
+
+      let charIndex = 0;
+
+      function revealNextChar() {
+        if (charIndex >= finalText.length) return;
+
+        const currentChar = finalText[charIndex];
+        const span = document.createElement('span');
+        span.className = 'typewriter-char';
+        span.textContent = currentChar === ' ' ? '\u00A0' : chars[Math.floor(Math.random() * chars.length)];
+        container.appendChild(span);
+
+        // Scramble this character
+        let scrambleCount = 0;
+        const maxScrambles = 6;
+
+        const scrambleInterval = setInterval(() => {
+          if (scrambleCount >= maxScrambles) {
+            span.textContent = currentChar === ' ' ? '\u00A0' : currentChar;
+            clearInterval(scrambleInterval);
+            charIndex++;
+            setTimeout(revealNextChar, 80); // Delay before next character
+          } else {
+            span.textContent = currentChar === ' ' ? '\u00A0' : chars[Math.floor(Math.random() * chars.length)];
+            scrambleCount++;
+          }
+        }, 40);
+      }
+
+      revealNextChar();
+    }
+
     // Dissolve Animation
     function playDissolve() {
       const text = "PRODUCT DESIGNER";
@@ -459,6 +527,7 @@
     }
 
     // Initialize
+    playTypewriterScramble();
     playDissolve();
     playBounce();
     playScramble();
