@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breakout Rooms — Microsoft Teams — Tanner Moehle</title>
+  <meta name="description" content="Designing breakout rooms for Microsoft Teams during the pandemic — from competitive gap to 75M daily active users.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              50: '#FAFAFA',
+              100: '#F5F5F5',
+              150: '#EFEFEF',
+              200: '#E5E5E5',
+              300: '#D4D4D4',
+              400: '#A3A3A3',
+              500: '#737373',
+              600: '#525252',
+              700: '#404040',
+              800: '#262626',
+              900: '#171717',
+              950: '#0A0A0A',
+            },
+            brand: {
+              50: '#EEF2FF',
+              100: '#E0E7FF',
+              200: '#C7D2FE',
+              300: '#A5B4FC',
+              400: '#818CF8',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+              800: '#3730A3',
+              900: '#312E81',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    :root {
+      --brand-primary: #4F52B2;
+      --brand-light: #6264D9;
+      --brand-dark: #3D3F8F;
+      --brand-subtle: rgba(79, 82, 178, 0.08);
+      --brand-gradient-from: #4F52B2;
+      --brand-gradient-to: #6264D9;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-feature-settings: 'ss01' on, 'cv01' on;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .dark .noise { opacity: 0.03; }
+
+    .text-brand { color: var(--brand-primary); }
+    .bg-brand { background-color: var(--brand-primary); }
+    .bg-brand-subtle { background-color: var(--brand-subtle); }
+    .border-brand { border-color: var(--brand-primary); }
+    .bg-brand-gradient {
+      background: linear-gradient(135deg, var(--brand-gradient-from), var(--brand-gradient-to));
+    }
+
+    .hero-gradient {
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(250, 250, 250, 0.8) 70%,
+        rgba(250, 250, 250, 1) 100%
+      );
+    }
+
+    .dark .hero-gradient {
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(10, 10, 10, 0.8) 70%,
+        rgba(10, 10, 10, 1) 100%
+      );
+    }
+
+    .link-hover {
+      background-image: linear-gradient(var(--brand-primary), var(--brand-primary));
+      background-position: 0% 100%;
+      background-repeat: no-repeat;
+      background-size: 0% 1px;
+      transition: background-size 200ms ease;
+    }
+    .link-hover:hover { background-size: 100% 1px; }
+
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-reveal {
+      animation: revealUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .delay-100 { animation-delay: 0.1s; opacity: 0; }
+    .delay-200 { animation-delay: 0.2s; opacity: 0; }
+    .delay-300 { animation-delay: 0.3s; opacity: 0; }
+    .delay-400 { animation-delay: 0.4s; opacity: 0; }
+
+    ::selection {
+      background-color: var(--brand-subtle);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .dropdown-item { background: transparent; }
+    .dropdown-teams:hover { background: rgba(99, 102, 241, 0.06); }
+    .dark .dropdown-teams:hover { background: rgba(99, 102, 241, 0.1); }
+  </style>
+</head>
+
+<body class="bg-surface-50 dark:bg-surface-950 text-surface-800 dark:text-surface-200 min-h-screen transition-colors duration-300">
+
+  <!-- Noise overlay -->
+  <div class="noise"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-surface-50/90 dark:bg-surface-950/90 backdrop-blur-sm">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="flex items-center justify-between h-14">
+        <!-- Back to Teams -->
+        <a href="teams.html" class="flex items-center gap-2 text-surface-500 dark:text-surface-400 hover:text-surface-800 dark:hover:text-surface-200 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          <span class="text-xs tracking-wide">Microsoft Teams</span>
+        </a>
+
+        <!-- Project Dropdown -->
+        <div class="relative" id="project-dropdown">
+          <button id="dropdown-trigger" class="flex items-center gap-2 text-xs text-surface-500 dark:text-surface-400 hover:text-surface-800 dark:hover:text-surface-200 transition-colors tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-brand-gradient"></span>
+            <span>Breakout Rooms</span>
+            <svg class="w-3.5 h-3.5 transition-transform duration-200" id="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="dropdown-menu" class="absolute top-full left-1/2 -translate-x-1/2 mt-2 py-2 bg-white dark:bg-surface-900 rounded-xl shadow-lg border border-surface-150 dark:border-surface-800 opacity-0 invisible translate-y-1 transition-all duration-200 min-w-[200px]">
+            <a href="teams-breakout-rooms.html" class="dropdown-item dropdown-teams flex items-center gap-3 px-4 py-2.5 transition-colors">
+              <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500"></span>
+              <span class="text-xs text-surface-700 dark:text-surface-300">Breakout Rooms</span>
+            </a>
+            <a href="teams-notifications.html" class="dropdown-item dropdown-teams flex items-center gap-3 px-4 py-2.5 transition-colors">
+              <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500"></span>
+              <span class="text-xs text-surface-700 dark:text-surface-300">Notifications</span>
+            </a>
+            <a href="teams-together-mode.html" class="dropdown-item dropdown-teams flex items-center gap-3 px-4 py-2.5 transition-colors">
+              <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500"></span>
+              <span class="text-xs text-surface-700 dark:text-surface-300">Together Mode</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button
+          id="theme-toggle"
+          class="text-surface-500 dark:text-surface-400 hover:text-surface-800 dark:hover:text-surface-200 transition-colors"
+          aria-label="Toggle theme"
+        >
+          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" stroke-width="1.5"/>
+            <path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="relative pt-14">
+      <!-- Hero Image -->
+      <div class="relative h-[60vh] min-h-[400px] max-h-[600px] overflow-hidden">
+        <div class="absolute inset-0 bg-brand-gradient opacity-10"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-12">
+          <!-- Placeholder for hero image -->
+          <div class="rounded-2xl overflow-hidden bg-surface-100 dark:bg-surface-900 w-full max-w-4xl animate-reveal">
+            <div class="aspect-[16/9] flex items-center justify-center p-8">
+              <p class="text-surface-400 text-sm">Hero image — Breakout Rooms UI</p>
+            </div>
+          </div>
+        </div>
+        <div class="hero-gradient absolute inset-0"></div>
+      </div>
+
+      <!-- Hero Content -->
+      <div class="max-w-[1200px] mx-auto px-6 -mt-20 relative z-10">
+        <div class="max-w-3xl">
+          <p class="text-xs uppercase tracking-widest text-brand mb-4 animate-reveal delay-100">Microsoft Teams</p>
+          <h1 class="text-4xl sm:text-5xl font-medium text-surface-900 dark:text-surface-100 mb-6 animate-reveal delay-200" style="letter-spacing: -0.02em; line-height: 1.1;">
+            Breakout Rooms
+          </h1>
+          <p class="text-lg text-surface-600 dark:text-surface-400 leading-relaxed animate-reveal delay-300">
+            Making disconnected sub-meetings feel like one unified experience — shipped under a one-quarter deadline during Teams' fastest growth period.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Details -->
+    <section class="max-w-[1200px] mx-auto px-6 py-16">
+      <div class="grid md:grid-cols-3 gap-8 mb-20">
+        <div class="animate-reveal delay-200">
+          <p class="text-xs uppercase tracking-widest text-surface-400 mb-2">Role</p>
+          <p class="text-sm text-surface-700 dark:text-surface-300">Sole Senior Designer</p>
+        </div>
+        <div class="animate-reveal delay-200">
+          <p class="text-xs uppercase tracking-widest text-surface-400 mb-2">Scope</p>
+          <p class="text-sm text-surface-700 dark:text-surface-300">Vision + End-to-End Design</p>
+        </div>
+        <div class="animate-reveal delay-200">
+          <p class="text-xs uppercase tracking-widest text-surface-400 mb-2">Growth</p>
+          <p class="text-sm text-surface-700 dark:text-surface-300">20M → 75M DAU</p>
+        </div>
+      </div>
+
+      <!-- Content Sections -->
+      <div class="space-y-24">
+
+        <!-- Role -->
+        <article class="grid md:grid-cols-[1fr,2fr] gap-12">
+          <div>
+            <h2 class="text-xs uppercase tracking-widest text-brand mb-4">Role</h2>
+          </div>
+          <div class="space-y-6 text-surface-600 dark:text-surface-400">
+            <p class="text-lg leading-relaxed">
+              Sole Senior Designer leading vision and end-to-end design for organizer and participant experiences, collaborating with Product Management and Engineering.
+            </p>
+          </div>
+        </article>
+
+        <!-- Context -->
+        <article class="grid md:grid-cols-[1fr,2fr] gap-12">
+          <div>
+            <h2 class="text-xs uppercase tracking-widest text-brand mb-4">Context</h2>
+          </div>
+          <div class="space-y-6 text-surface-600 dark:text-surface-400">
+            <p class="text-lg leading-relaxed">
+              In early 2020, as the pandemic drove millions to remote work and learning, breakout rooms became one of the most requested features from customers.
+            </p>
+            <p>
+              Teachers needed to split students into study groups. HR and corporate teams needed workgroup sessions for brainstorming and workshops. Zoom had it. We didn't. Leadership mandated we close this competitive gap — within one quarter.
+            </p>
+          </div>
+        </article>
+
+        <!-- Image placeholder -->
+        <div class="rounded-2xl overflow-hidden bg-brand-subtle">
+          <div class="aspect-[16/9] flex items-center justify-center p-12">
+            <p class="text-surface-400 text-sm">Image — competitive landscape / user research</p>
+          </div>
+        </div>
+
+        <!-- Challenge -->
+        <article class="grid md:grid-cols-[1fr,2fr] gap-12">
+          <div>
+            <h2 class="text-xs uppercase tracking-widest text-brand mb-4">Challenge</h2>
+          </div>
+          <div class="space-y-6 text-surface-600 dark:text-surface-400">
+            <p class="text-lg leading-relaxed">
+              Teams' backend couldn't create sub-meetings within a parent meeting, and the meeting canvas was non-interactive streaming video.
+            </p>
+            <p>
+              My original vision was a spatial experience where organizers could see live feeds of each room on the canvas and drag-and-drop participants between them. The tech stack couldn't support it.
+            </p>
+          </div>
+        </article>
+
+        <!-- Two-column images -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="rounded-2xl overflow-hidden bg-surface-100 dark:bg-surface-900">
+            <div class="aspect-[4/3] flex items-center justify-center p-8">
+              <p class="text-surface-400 text-sm">Image — original spatial vision</p>
+            </div>
+          </div>
+          <div class="rounded-2xl overflow-hidden bg-surface-100 dark:bg-surface-900">
+            <div class="aspect-[4/3] flex items-center justify-center p-8">
+              <p class="text-surface-400 text-sm">Image — technical constraints diagram</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Decisions -->
+        <article class="grid md:grid-cols-[1fr,2fr] gap-12">
+          <div>
+            <h2 class="text-xs uppercase tracking-widest text-brand mb-4">Key Decisions</h2>
+          </div>
+          <div class="space-y-6 text-surface-600 dark:text-surface-400">
+            <p class="text-lg leading-relaxed">
+              I killed the canvas-based vision for the MVP and designed a two-surface management model instead — choosing shippability over aspiration while preserving the vision as a northstar.
+            </p>
+            <p>
+              I chose a modal for bulk participant assignment rather than inline editing, because organizers managing 30+ participants needed to work fast. I kept the participant experience passive — notification-based, no action required — to reduce friction in the classroom use case.
+            </p>
+            <p>
+              I also navigated component approvals with the Framework design team in Seattle during a mid-cycle redesign, and partnered with a junior dev lead whose strengths were backend, adjusting how I communicated specs to protect frontend quality.
+            </p>
+          </div>
+        </article>
+
+        <!-- Solution -->
+        <article class="grid md:grid-cols-[1fr,2fr] gap-12">
+          <div>
+            <h2 class="text-xs uppercase tracking-widest text-brand mb-4">Solution</h2>
+          </div>
+          <div class="space-y-6 text-surface-600 dark:text-surface-400">
+            <p class="text-lg leading-relaxed">
+              A modal dialog lets organizers select participants from a list and bulk-assign them to rooms.
+            </p>
+            <p>
+              A persistent side panel serves as a command center — showing room status, participant assignments, and a single "Open" button to launch all rooms simultaneously. Participants receive a notification and are moved into their rooms automatically.
+            </p>
+          </div>
+        </article>
+
+        <!-- Full-width image -->
+        <div class="rounded-2xl overflow-hidden bg-surface-900 shadow-2xl">
+          <div class="aspect-[16/9] flex items-center justify-center p-12">
+            <p class="text-surface-400 text-sm">Image — final breakout rooms UI: modal + side panel</p>
+          </div>
+        </div>
+
+        <!-- Two-column detail images -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="rounded-2xl overflow-hidden bg-surface-100 dark:bg-surface-900">
+            <div class="aspect-[4/3] flex items-center justify-center p-8">
+              <p class="text-surface-400 text-sm">Image — assignment modal</p>
+            </div>
+          </div>
+          <div class="rounded-2xl overflow-hidden bg-surface-100 dark:bg-surface-900">
+            <div class="aspect-[4/3] flex items-center justify-center p-8">
+              <p class="text-surface-400 text-sm">Image — command center side panel</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Outcome -->
+        <article class="grid md:grid-cols-[1fr,2fr] gap-12">
+          <div>
+            <h2 class="text-xs uppercase tracking-widest text-brand mb-4">Outcome</h2>
+          </div>
+          <div class="space-y-6 text-surface-600 dark:text-surface-400">
+            <p class="text-lg leading-relaxed">
+              I presented the long-term vision to Jeff Teper, Corporate Vice President of Office 365, establishing a northstar for the feature's evolution.
+            </p>
+            <p>
+              We shipped the MVP within one quarter and achieved competitive parity with Zoom during Teams' fastest growth period — the platform scaled from 20M to 75M daily active users that year. The feature continued to evolve with simplified assignments, organizer announcements to rooms, and participant shuffling.
+            </p>
+          </div>
+        </article>
+
+        <!-- Metrics -->
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="rounded-2xl bg-brand-subtle p-8 text-center">
+            <p class="text-3xl font-medium text-surface-900 dark:text-surface-100 mb-2" style="letter-spacing: -0.02em;">20M → 75M</p>
+            <p class="text-xs uppercase tracking-widest text-surface-500">Daily Active Users</p>
+          </div>
+          <div class="rounded-2xl bg-brand-subtle p-8 text-center">
+            <p class="text-3xl font-medium text-surface-900 dark:text-surface-100 mb-2" style="letter-spacing: -0.02em;">1 Quarter</p>
+            <p class="text-xs uppercase tracking-widest text-surface-500">Concept to Ship</p>
+          </div>
+          <div class="rounded-2xl bg-brand-subtle p-8 text-center">
+            <p class="text-3xl font-medium text-surface-900 dark:text-surface-100 mb-2" style="letter-spacing: -0.02em;">CVP Pres.</p>
+            <p class="text-xs uppercase tracking-widest text-surface-500">Long-term Vision</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Next Feature -->
+    <section class="border-t border-surface-150 dark:border-surface-800">
+      <a href="teams-notifications.html" class="group block max-w-[1200px] mx-auto px-6 py-16 hover:bg-surface-50 dark:hover:bg-surface-900 transition-colors">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs uppercase tracking-widest text-surface-400 mb-2">Next Feature</p>
+            <p class="text-2xl font-medium text-surface-900 dark:text-surface-100">Meeting Notifications</p>
+          </div>
+          <svg class="w-6 h-6 text-surface-400 group-hover:text-surface-600 dark:group-hover:text-surface-300 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </div>
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="max-w-[1200px] mx-auto px-6 py-8 border-t border-surface-100 dark:border-surface-800">
+    <div class="flex justify-between items-center text-xs text-surface-400">
+      <span>&copy; 2026 Tanner Moehle</span>
+      <a href="mailto:tmoehle@mac.com" class="hover:text-surface-600 dark:hover:text-surface-300 transition-colors">
+        tmoehle@mac.com
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const getTheme = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+
+    const setTheme = (theme) => {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+      localStorage.setItem('theme', theme);
+    };
+
+    setTheme(getTheme());
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Dropdown Menu
+    const dropdownTrigger = document.getElementById('dropdown-trigger');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    const dropdownArrow = document.getElementById('dropdown-arrow');
+    let isOpen = false;
+
+    const openDropdown = () => {
+      isOpen = true;
+      dropdownMenu.classList.remove('opacity-0', 'invisible', 'translate-y-1');
+      dropdownMenu.classList.add('opacity-100', 'visible', 'translate-y-0');
+      dropdownArrow.classList.add('rotate-180');
+    };
+
+    const closeDropdown = () => {
+      isOpen = false;
+      dropdownMenu.classList.add('opacity-0', 'invisible', 'translate-y-1');
+      dropdownMenu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+      dropdownArrow.classList.remove('rotate-180');
+    };
+
+    dropdownTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isOpen ? closeDropdown() : openDropdown();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdownMenu.contains(e.target) && !dropdownTrigger.contains(e.target)) {
+        closeDropdown();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDropdown();
+    });
+  </script>
+
+</body>
+</html>
