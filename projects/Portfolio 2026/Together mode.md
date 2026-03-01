@@ -1,0 +1,11 @@
+**Together Mode Assigned Seating — Microsoft Teams**
+
+**Role** Senior Designer, inherited the project mid-sprint after a designer departure. Responsible for delivering a proposal within two weeks and designing the end-to-end scene selection and seat assignment experience.
+
+**Problem** Together Mode — which places participants in a shared virtual scene like an auditorium or coffee shop — launched during the pandemic to reduce meeting fatigue. But it shipped as a bare-bones feature with two key adoption blockers: participants could only enable it individually (there was no way for an organizer to turn it on for everyone), and there was no way to control where people sat. Adoption was low and the feature wasn't discoverable. Internally, customers like Microsoft leadership wanted the ability to assign executives to front rows.
+
+**Challenge** Together Mode scenes are rendered as a single flat video feed — they can't be directly interacted with. Previous explorations had looked at spatial solutions on the canvas, but like Breakout Rooms, this wasn't technically feasible. I needed to find a way to give organizers spatial control over seating without being able to interact with the live scene itself.
+
+**Solution** I designed a modal that rendered the scene map with clickable seat positions. Organizers click a seat, get a contextual participant picker at that location, and assign people spatially. The modal also included auto-assign for empty seats, a save layout option for recurring meeting series, and the ability to set Together Mode as the default view for all participants. This gave organizers full control — from a teacher arranging a classroom to a corporate admin seating leadership in the front row — while keeping the experience simple and accessible.
+
+**Outcome** After one month, organizers who set Together Mode as a default view represented 1.1% of MAU, with 87% of those organizers continuing meetings in Together Mode for 30 minutes or longer. These organizers brought in 8.04% of MAU through their meeting participants. Out of 2.2M MAU, 450K became power users, using Together Mode three or more times per month.

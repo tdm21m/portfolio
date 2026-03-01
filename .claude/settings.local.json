@@ -3,7 +3,22 @@
     "allow": [
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(firecrawl scrape:*)",
+      "Bash(xargs:*)",
+      "mcp__Figma__get_metadata",
+      "mcp__Figma__get_design_context",
+      "Bash(lsof:*)",
+      "Bash(curl:*)",
+      "mcp__Figma__create_design_system_rules",
+      "mcp__Figma__get_screenshot",
+      "Bash(python3:*)",
+      "Bash(wc:*)",
+      "Bash(claude mcp list:*)",
+      "Bash(claude mcp add:*)",
+      "mcp__figma__generate_figma_design",
+      "Bash(open:*)",
+      "Bash(ls:*)"
     ]
   }
 }

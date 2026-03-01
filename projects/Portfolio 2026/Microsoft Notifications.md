@@ -1,0 +1,10 @@
+
+**Meeting Notifications Framework — Microsoft Teams**
+
+**Role** Senior Designer leading UX audit, framework logic, visual design, and animation. Facilitated cross-team alignment through weekly design meetings and documentation.
+
+**Problem** Since its initial implementation in 2016, the in-meeting notifications framework had become a junk drawer. With 200+ notifications across feature teams and no governance or documentation, teams chose whichever notification type they wanted. Notifications overlapped each other, blocked the meeting canvas, stacked banners that shifted the video grid, and failed accessibility standards. The Raise Hand and Chat Bubbles features — both leadership priorities — were blocked from shipping because they collided with existing notifications.
+
+**Solution** I conducted a UX audit of all in-meeting notifications and designed a new framework built around three tiers: Permanent notifications for critical alerts and actionable items that stay on screen, Temporary notifications for informational toasts and chat bubbles that appear and dismiss, and Standalone notifications for fixed-position indicators like mute status. This taxonomy gave every notification a clear home and set of rules. I removed 104 redundant or misclassified notifications, created a handbook for product teams on when and how to use each type, and established a weekly open design meeting where feature teams could bring their notification needs for guidance. These meetings typically included a PM, designer, and developer from each team.
+
+**Outcome** Raise Hand and Chat Bubbles were unblocked and shipped within a quarter. The framework continued to scale as I worked with product teams across feature areas. Through our VIP pilot program, 100% of 49 customers completed critical tasks and signed off for feature release, with NSAT scores of 8.8 for participants and 9.3 for admins.
