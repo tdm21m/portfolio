@@ -208,11 +208,10 @@
   </nav>
 
   <!-- Main Content -->
-  <main class="max-w-[1400px] mx-auto px-4 sm:px-6">
-    <div class="lg:grid lg:grid-cols-[320px,1fr] lg:gap-8">
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 mt-14 lg:h-[calc(100vh-3.5rem)] lg:flex lg:gap-8 lg:overflow-hidden">
 
-      <!-- Left Sidebar: Bio top, Contact bottom -->
-      <div class="lg:sticky lg:top-14 lg:h-[calc(100vh-3.5rem)] lg:flex lg:flex-col lg:justify-between pt-28 pb-12 flex flex-col justify-between">
+      <!-- Left Sidebar: Bio top, Contact bottom — never scrolls -->
+      <div class="lg:w-[320px] lg:flex-shrink-0 lg:h-full lg:flex lg:flex-col lg:justify-between pt-14 pb-12 flex flex-col justify-between">
 
         <!-- Bio — top -->
         <div class="space-y-5">
@@ -262,8 +261,8 @@
 
       </div>
 
-      <!-- Right Column: Uniform project cards -->
-      <div class="pt-20 pb-12 space-y-3">
+      <!-- Right Column: scrolls independently -->
+      <div class="lg:flex-1 lg:h-full lg:overflow-y-auto pt-8 pb-12 space-y-3">
 
         <!-- Microsoft Teams -->
         <a href="projects/teams.html" class="project-card block rounded-2xl overflow-hidden relative group">
@@ -318,7 +317,6 @@
         </a>
 
       </div>
-    </div>
   </main>
 
 
