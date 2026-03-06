@@ -241,7 +241,7 @@
       <!-- Metrics -->
       <div class="grid md:grid-cols-3 gap-6 mb-20">
         <div class="rounded-2xl bg-brand-subtle p-8 text-center">
-          <p class="text-3xl font-medium text-surface-900 dark:text-surface-100 mb-2" style="letter-spacing: -0.02em;">20M → 75M</p>
+          <p class="text-3xl font-medium text-surface-900 dark:text-surface-100 mb-2" style="letter-spacing: -0.02em;" data-count="75" data-prefix="20M → " data-suffix="M">20M → 75M</p>
           <p class="text-xs uppercase tracking-widest text-surface-500">Daily Active Users</p>
         </div>
         <div class="rounded-2xl bg-brand-subtle p-8 text-center">
@@ -448,5 +448,38 @@
     });
   </script>
 
+
+  <script>
+    // Metrics Counter Animation
+    (function() {
+      const els = document.querySelectorAll('[data-count]');
+      if (!els.length) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target   = parseFloat(el.dataset.count);
+          const suffix   = el.dataset.suffix  || '';
+          const prefix   = el.dataset.prefix  || '';
+          const decimals = parseInt(el.dataset.decimal || '0');
+          const comma    = el.dataset.comma === 'true';
+          const duration = 1400;
+          const start    = performance.now();
+          function tick(now) {
+            const p = Math.min((now - start) / duration, 1);
+            const e = 1 - Math.pow(1 - p, 3);
+            const v = e * target;
+            let s = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toString();
+            if (comma) s = parseInt(s).toLocaleString();
+            el.textContent = prefix + s + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+          obs.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      els.forEach(el => obs.observe(el));
+    })();
+  </script>
 </body>
 </html>
