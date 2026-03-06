@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab — Tanner Moehle</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              50: '#FAFAFA', 100: '#F5F5F5', 150: '#EFEFEF', 200: '#E5E5E5',
+              300: '#D4D4D4', 400: '#A3A3A3', 500: '#737373', 600: '#525252',
+              700: '#404040', 800: '#262626', 900: '#171717', 950: '#0A0A0A',
+            }
+          },
+          fontFamily: {
+            sans: ['Geist Sans', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    html { -webkit-font-smoothing: antialiased; }
+
+    /* ─── 1. STAGGERED TEXT REVEAL ─── */
+    .reveal-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-word.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── 2. CARD HOVER — SLIDE UP ─── */
+    .card-slide .slide-content {
+      transform: translateY(100%);
+      transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .card-slide:hover .slide-content {
+      transform: translateY(0);
+    }
+    .card-slide .card-img {
+      transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .card-slide:hover .card-img {
+      transform: scale(1.05);
+    }
+
+    /* ─── 3. CARD HOVER — FADE (current) ─── */
+    .card-fade .fade-content {
+      opacity: 0;
+      transition: opacity 250ms ease;
+    }
+    .card-fade:hover .fade-content {
+      opacity: 1;
+    }
+    .card-fade .card-img {
+      transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .card-fade:hover .card-img {
+      transform: scale(1.03);
+    }
+
+    /* ─── 4. SCROLL ENTRANCE ─── */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .scroll-reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── 5. CUSTOM CURSOR ─── */
+    .cursor-zone {
+      cursor: none;
+    }
+    #custom-cursor {
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease, mix-blend-mode 0.1s ease;
+      mix-blend-mode: normal;
+    }
+    #custom-cursor.expanded {
+      width: 48px;
+      height: 48px;
+      mix-blend-mode: difference;
+    }
+
+    /* ─── 6. MAGNETIC BUTTON ─── */
+    .magnetic {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .magnetic .mag-arrow {
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .magnetic:hover .mag-arrow {
+      transform: translateX(5px);
+    }
+
+    /* ─── 7. LINK UNDERLINE GROW ─── */
+    .underline-grow {
+      background-image: linear-gradient(currentColor, currentColor);
+      background-position: 0% 100%;
+      background-repeat: no-repeat;
+      background-size: 0% 1px;
+      transition: background-size 300ms ease;
+    }
+    .underline-grow:hover {
+      background-size: 100% 1px;
+    }
+
+    /* ─── 8. BORDER TRACE ─── */
+    .border-trace {
+      position: relative;
+    }
+    .border-trace::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background: linear-gradient(90deg, #818CF8, #C084FC, #818CF8) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+    .border-trace:hover::before {
+      opacity: 1;
+    }
+
+    /* ─── 9. NUMBER COUNT UP ─── */
+    .count-number {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── 10. PARALLAX IMAGE ─── */
+    .parallax-card {
+      overflow: hidden;
+    }
+    .parallax-img {
+      transition: transform 0.1s linear;
+      transform-origin: center center;
+    }
+
+    /* Lab nav */
+    .lab-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body class="bg-surface-950 text-surface-200 min-h-screen">
+
+  <!-- Custom cursor (follows mouse, only active inside cursor zones) -->
+  <div id="custom-cursor"></div>
+
+  <!-- Header -->
+  <header class="border-b border-surface-800 px-8 py-5 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-surface-500 hover:text-surface-300 transition-colors text-sm">← Back</a>
+      <span class="text-surface-700">|</span>
+      <span class="lab-tag text-surface-500">Private Lab</span>
+    </div>
+    <h1 class="text-sm font-medium text-surface-300">Animation & Interaction Playground</h1>
+    <span class="lab-tag text-surface-600">Not indexed · Not linked</span>
+  </header>
+
+  <main class="max-w-[1100px] mx-auto px-8 py-16 space-y-24">
+
+    <!-- ─── EXPERIMENT 1: Staggered Text Reveal ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">01</span>
+        <h2 class="text-sm font-medium text-surface-400">Staggered Text Reveal</h2>
+        <span class="text-surface-700 text-xs ml-auto">Triggers on page load · good for hero bio</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-12 border border-surface-800">
+        <div id="stagger-demo" class="space-y-3">
+          <h3 class="text-4xl font-medium tracking-tight text-surface-100" id="stagger-name"></h3>
+          <p class="text-lg text-surface-500" id="stagger-title"></p>
+          <div class="space-y-2 pt-2">
+            <p class="text-sm text-surface-400 leading-relaxed" id="stagger-line1"></p>
+            <p class="text-sm text-surface-400 leading-relaxed" id="stagger-line2"></p>
+          </div>
+        </div>
+        <button id="replay-stagger" class="mt-8 text-xs text-surface-600 hover:text-surface-400 transition-colors underline-grow">
+          Replay ↺
+        </button>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 2: Card Hover — Slide Up ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">02</span>
+        <h2 class="text-sm font-medium text-surface-400">Card Hover — Slide Up</h2>
+        <span class="text-surface-700 text-xs ml-auto">Alternative to current fade · more dramatic</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-8 border border-surface-800">
+        <div class="card-slide cursor-zone rounded-xl overflow-hidden relative group aspect-[16/10] bg-surface-800 max-w-2xl">
+          <div class="card-img absolute inset-0 bg-gradient-to-br from-blue-900/60 via-indigo-900/40 to-violet-900/60 flex items-center justify-center">
+            <div class="w-24 h-24 rounded-2xl bg-white/5 border border-white/10"></div>
+          </div>
+          <!-- Overlay always present, content slides up -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+          <div class="absolute inset-x-0 bottom-0 overflow-hidden">
+            <div class="slide-content p-7">
+              <p class="text-white font-medium text-2xl mb-3" style="letter-spacing:-0.02em">Microsoft Teams</p>
+              <div class="flex gap-8">
+                <div><p class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Role</p><p class="text-white/90 text-xs">Senior Designer</p></div>
+                <div><p class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Timeline</p><p class="text-white/90 text-xs">2020–2023</p></div>
+                <div><p class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Scale</p><p class="text-white/90 text-xs">280M users</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-surface-600 mt-4">Hover the card ↑</p>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 3: Card Hover — Current (Fade) ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">03</span>
+        <h2 class="text-sm font-medium text-surface-400">Card Hover — Fade (Current)</h2>
+        <span class="text-surface-700 text-xs ml-auto">Your existing implementation · for comparison</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-8 border border-surface-800">
+        <div class="card-fade cursor-zone rounded-xl overflow-hidden relative group aspect-[16/10] bg-surface-800 max-w-2xl">
+          <div class="card-img absolute inset-0 bg-gradient-to-br from-blue-900/60 via-indigo-900/40 to-violet-900/60 flex items-center justify-center">
+            <div class="w-24 h-24 rounded-2xl bg-white/5 border border-white/10"></div>
+          </div>
+          <div class="fade-content absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-7">
+            <div>
+              <p class="text-white font-medium text-2xl mb-3" style="letter-spacing:-0.02em">Microsoft Teams</p>
+              <div class="flex gap-8">
+                <div><p class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Role</p><p class="text-white/90 text-xs">Senior Designer</p></div>
+                <div><p class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Timeline</p><p class="text-white/90 text-xs">2020–2023</p></div>
+                <div><p class="text-white/50 text-[10px] uppercase tracking-widest mb-1">Scale</p><p class="text-white/90 text-xs">280M users</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-surface-600 mt-4">Hover the card ↑</p>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 4: Scroll Entrance ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">04</span>
+        <h2 class="text-sm font-medium text-surface-400">Scroll Entrance</h2>
+        <span class="text-surface-700 text-xs ml-auto">IntersectionObserver · cards fade-up as they enter view</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-8 border border-surface-800 space-y-4">
+        <div class="scroll-reveal rounded-xl aspect-[16/10] bg-gradient-to-br from-violet-900/50 to-purple-900/50 border border-surface-700 max-w-2xl flex items-center justify-center">
+          <p class="text-surface-500 text-sm">Card One</p>
+        </div>
+        <div class="scroll-reveal rounded-xl aspect-[16/10] bg-gradient-to-br from-blue-900/50 to-indigo-900/50 border border-surface-700 max-w-2xl flex items-center justify-center" style="transition-delay: 0.1s">
+          <p class="text-surface-500 text-sm">Card Two</p>
+        </div>
+        <p class="text-xs text-surface-600">Scroll past this section and back ↑</p>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 5: Custom Cursor ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">05</span>
+        <h2 class="text-sm font-medium text-surface-400">Custom Cursor</h2>
+        <span class="text-surface-700 text-xs ml-auto">Small dot · expands + blend-mode difference on hover</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-8 border border-surface-800">
+        <div class="cursor-zone rounded-xl aspect-[16/10] bg-gradient-to-br from-surface-800 to-surface-900 border border-surface-700 max-w-2xl flex items-center justify-center" id="cursor-demo-zone">
+          <p class="text-surface-500 text-sm pointer-events-none">Move your cursor here</p>
+        </div>
+        <p class="text-xs text-surface-600 mt-4">Cursor becomes a white dot · expands to 48px on the card with difference blend mode</p>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 6: Magnetic Button ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">06</span>
+        <h2 class="text-sm font-medium text-surface-400">Magnetic Button</h2>
+        <span class="text-surface-700 text-xs ml-auto">JS mouse tracking · button drifts toward cursor</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-12 border border-surface-800 flex items-center gap-16">
+        <!-- Basic arrow nudge (CSS only) -->
+        <div>
+          <p class="text-xs text-surface-600 mb-4 lab-tag">CSS version</p>
+          <button class="magnetic text-sm font-medium text-surface-200 hover:text-white transition-colors">
+            Say hello
+            <svg class="mag-arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- True magnetic (JS) -->
+        <div>
+          <p class="text-xs text-surface-600 mb-4 lab-tag">JS magnetic version</p>
+          <button id="mag-btn" class="text-sm font-medium text-surface-200 hover:text-white transition-colors flex items-center gap-2"
+            style="transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)">
+            Say hello
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 7: Animated Metrics Counter ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">07</span>
+        <h2 class="text-sm font-medium text-surface-400">Animated Metrics Counter</h2>
+        <span class="text-surface-700 text-xs ml-auto">Numbers count up when scrolled into view</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-12 border border-surface-800">
+        <div class="flex gap-16 scroll-reveal">
+          <div>
+            <p class="count-number text-4xl font-medium text-surface-100" data-target="280" data-suffix="M">0</p>
+            <p class="text-xs text-surface-500 mt-2 uppercase tracking-widest">Users</p>
+          </div>
+          <div>
+            <p class="count-number text-4xl font-medium text-surface-100" data-target="50" data-suffix="K/wk">0</p>
+            <p class="text-xs text-surface-500 mt-2 uppercase tracking-widest">Meetings</p>
+          </div>
+          <div>
+            <p class="count-number text-4xl font-medium text-surface-100" data-target="104" data-suffix="">0</p>
+            <p class="text-xs text-surface-500 mt-2 uppercase tracking-widest">Notifications cut</p>
+          </div>
+          <div>
+            <p class="count-number text-4xl font-medium text-surface-100" data-target="87" data-suffix="%">0</p>
+            <p class="text-xs text-surface-500 mt-2 uppercase tracking-widest">Retention</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 8: Animated Border Trace ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">08</span>
+        <h2 class="text-sm font-medium text-surface-400">Glowing Border on Hover</h2>
+        <span class="text-surface-700 text-xs ml-auto">Gradient border fades in on card hover</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-8 border border-surface-800">
+        <div class="border-trace cursor-zone rounded-xl aspect-[16/10] bg-surface-800 max-w-2xl flex items-center justify-center border border-surface-700 transition-colors duration-300 hover:border-transparent">
+          <p class="text-surface-500 text-sm">Hover for gradient border</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 9: Name Scramble ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">09</span>
+        <h2 class="text-sm font-medium text-surface-400">Text Scramble</h2>
+        <span class="text-surface-700 text-xs ml-auto">Characters randomize then resolve · good for name/title</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-12 border border-surface-800">
+        <h3 id="scramble-text" class="text-4xl font-medium text-surface-100 tracking-tight cursor-pointer select-none" title="Hover to replay">
+          Tanner Moehle
+        </h3>
+        <p class="text-surface-500 text-sm mt-2" id="scramble-subtitle">Senior Product Designer</p>
+        <button id="replay-scramble" class="mt-6 text-xs text-surface-600 hover:text-surface-400 transition-colors underline-grow">
+          Replay ↺
+        </button>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIMENT 10: Hover Image Reveal ─── -->
+    <section>
+      <div class="flex items-center gap-4 mb-8">
+        <span class="lab-tag text-surface-600">10</span>
+        <h2 class="text-sm font-medium text-surface-400">Link Image Reveal</h2>
+        <span class="text-surface-700 text-xs ml-auto">Image peeks in at cursor position when hovering a link · like linear.app</span>
+      </div>
+
+      <div class="bg-surface-900 rounded-2xl p-12 border border-surface-800">
+        <div class="space-y-6">
+          <div class="relative inline-block" id="reveal-link-1">
+            <span class="text-2xl font-medium text-surface-200 cursor-pointer underline-grow hover:text-white transition-colors">Microsoft Teams</span>
+            <div class="reveal-preview absolute left-full top-1/2 -translate-y-1/2 ml-6 w-48 h-32 rounded-xl bg-gradient-to-br from-blue-900/80 to-indigo-900/80 border border-surface-700 opacity-0 scale-95 pointer-events-none transition-all duration-300 flex items-center justify-center">
+              <p class="text-surface-400 text-xs">Preview</p>
+            </div>
+          </div>
+          <div class="relative inline-block" id="reveal-link-2">
+            <span class="text-2xl font-medium text-surface-200 cursor-pointer underline-grow hover:text-white transition-colors">Decisions</span>
+            <div class="reveal-preview absolute left-full top-1/2 -translate-y-1/2 ml-6 w-48 h-32 rounded-xl bg-gradient-to-br from-violet-900/80 to-purple-900/80 border border-surface-700 opacity-0 scale-95 pointer-events-none transition-all duration-300 flex items-center justify-center">
+              <p class="text-surface-400 text-xs">Preview</p>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-surface-600 mt-8">Hover the project names ↑</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-surface-800 px-8 py-6 text-center">
+    <p class="text-xs text-surface-700">Private · tannermoehle.com/lab</p>
+  </footer>
+
+  <script>
+    // ── Dark mode (default dark for lab) ──
+    document.documentElement.classList.add('dark');
+
+    // ── Custom Cursor ──
+    const cursor = document.getElementById('custom-cursor');
+    let cursorVisible = false;
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('.cursor-zone').forEach(zone => {
+      zone.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+        cursor.classList.add('expanded');
+      });
+      zone.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+        cursor.classList.remove('expanded');
+      });
+    });
+    cursor.style.opacity = '0';
+
+    // ── Staggered Text Reveal ──
+    function runStagger() {
+      const lines = [
+        { el: 'stagger-name', text: 'Tanner Moehle', delay: 0 },
+        { el: 'stagger-title', text: 'Senior Product Designer', delay: 120 },
+        { el: 'stagger-line1', text: 'From Flash animations and CD-ROMs to the AI singularity—20+ years of pushing pixels and still shipping.', delay: 240 },
+        { el: 'stagger-line2', text: "I've designed everything from startup MVPs to enterprise systems used by hundreds of millions.", delay: 360 },
+      ];
+
+      lines.forEach(({ el, text, delay }) => {
+        const element = document.getElementById(el);
+        element.innerHTML = '';
+        const words = text.split(' ');
+        words.forEach((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'reveal-word';
+          span.textContent = word + (i < words.length - 1 ? '\u00a0' : '');
+          element.appendChild(span);
+          setTimeout(() => span.classList.add('visible'), delay + i * 40);
+        });
+      });
+    }
+
+    runStagger();
+    document.getElementById('replay-stagger').addEventListener('click', runStagger);
+
+    // ── Scroll Entrance (IntersectionObserver) ──
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        } else {
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+
+    // ── Magnetic Button ──
+    const magBtn = document.getElementById('mag-btn');
+    magBtn.addEventListener('mousemove', (e) => {
+      const rect = magBtn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.35;
+      const dy = (e.clientY - cy) * 0.35;
+      magBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    magBtn.addEventListener('mouseleave', () => {
+      magBtn.style.transform = 'translate(0, 0)';
+    });
+
+    // ── Counter Animation ──
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix;
+      const duration = 1200;
+      const startTime = performance.now();
+
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * target);
+        el.textContent = current + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.count-number').forEach(animateCounter);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+      if (el.querySelector('.count-number')) counterObserver.observe(el);
+    });
+
+    // ── Text Scramble ──
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    function scramble(el, finalText, duration = 900) {
+      const len = finalText.length;
+      let frame = 0;
+      const totalFrames = Math.round(duration / 30);
+      const interval = setInterval(() => {
+        el.textContent = finalText.split('').map((char, i) => {
+          if (char === ' ') return ' ';
+          const revealAt = Math.floor((i / len) * totalFrames * 0.8);
+          if (frame > revealAt) return char;
+          return chars[Math.floor(Math.random() * chars.length)];
+        }).join('');
+        frame++;
+        if (frame >= totalFrames) {
+          el.textContent = finalText;
+          clearInterval(interval);
+        }
+      }, 30);
+    }
+
+    const scrambleEl = document.getElementById('scramble-text');
+    const scrambleSub = document.getElementById('scramble-subtitle');
+    setTimeout(() => scramble(scrambleEl, 'Tanner Moehle'), 400);
+    setTimeout(() => scramble(scrambleSub, 'Senior Product Designer'), 700);
+
+    document.getElementById('replay-scramble').addEventListener('click', () => {
+      scramble(scrambleEl, 'Tanner Moehle');
+      setTimeout(() => scramble(scrambleSub, 'Senior Product Designer'), 300);
+    });
+    scrambleEl.addEventListener('mouseenter', () => scramble(scrambleEl, 'Tanner Moehle', 600));
+
+    // ── Link Image Reveal ──
+    document.querySelectorAll('#reveal-link-1, #reveal-link-2').forEach(link => {
+      const preview = link.querySelector('.reveal-preview');
+      link.querySelector('span').addEventListener('mouseenter', () => {
+        preview.style.opacity = '1';
+        preview.style.transform = 'translateY(-50%) scale(1)';
+      });
+      link.querySelector('span').addEventListener('mouseleave', () => {
+        preview.style.opacity = '0';
+        preview.style.transform = 'translateY(-50%) scale(0.95)';
+      });
+    });
+  </script>
+
+</body>
+</html>
