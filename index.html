@@ -124,6 +124,18 @@
       background-color: rgba(139, 115, 85, 0.15);
     }
 
+    /* Staggered text reveal */
+    .reveal-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal-word.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* Say hello — CSS arrow nudge */
     .say-hello svg {
       transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
@@ -225,21 +237,21 @@
         <!-- Bio — top -->
         <div class="space-y-5">
           <div>
-            <h1 class="text-xl font-medium text-surface-900 dark:text-surface-100">
+            <h1 id="bio-name" class="text-xl font-medium text-surface-900 dark:text-surface-100">
               Tanner Moehle
             </h1>
-            <p class="text-base text-surface-500 dark:text-surface-400 mt-1">
+            <p id="bio-title" class="text-base text-surface-500 dark:text-surface-400 mt-1">
               Senior Product Designer
             </p>
           </div>
           <div class="space-y-4 text-sm text-surface-600 dark:text-surface-400 leading-relaxed">
-            <p>
+            <p id="bio-p1">
               From Flash animations and CD-ROMs to the AI singularity—20+ years of pushing pixels and still shipping.
             </p>
-            <p>
+            <p id="bio-p2">
               I've designed everything from startup MVPs to enterprise systems used by hundreds of millions. The secret? Showing up, staying curious, and knowing when to let go.
             </p>
-            <p>
+            <p id="bio-p3">
               I specialize in the invisible stuff—notification systems, presence indicators, the things you only notice when they break. IBM, EA Games, fintech in Lagos, and startups across the spectrum.
             </p>
           </div>
@@ -390,6 +402,31 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeDropdown();
     });
+
+    // Staggered Bio Reveal
+    (function () {
+      const items = [
+        { id: 'bio-name',  delay: 0   },
+        { id: 'bio-title', delay: 100 },
+        { id: 'bio-p1',    delay: 230 },
+        { id: 'bio-p2',    delay: 340 },
+        { id: 'bio-p3',    delay: 450 },
+      ];
+      items.forEach(({ id, delay }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const text = el.textContent.trim();
+        el.innerHTML = '';
+        const words = text.split(' ');
+        words.forEach((word, i) => {
+          const span = document.createElement('span');
+          span.className = 'reveal-word';
+          span.textContent = word + (i < words.length - 1 ? '\u00a0' : '');
+          el.appendChild(span);
+          setTimeout(() => span.classList.add('visible'), delay + i * 35);
+        });
+      });
+    })();
 
   </script>
 
