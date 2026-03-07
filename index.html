@@ -124,6 +124,14 @@
       background-color: rgba(139, 115, 85, 0.15);
     }
 
+    /* Say hello — CSS arrow nudge */
+    .say-hello svg {
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .say-hello:hover svg {
+      transform: translateX(5px);
+    }
+
     /* Reduced motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -243,9 +251,9 @@
             Got an interesting problem? A wild idea? Or just want to talk shop? I'm always down.
           </p>
           <div class="flex items-center justify-between">
-            <span id="say-hello-btn" class="inline-flex items-center gap-2 text-sm font-medium text-surface-800 dark:text-surface-200 cursor-default" style="transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+            <span class="say-hello inline-flex items-center gap-2 text-sm font-medium text-surface-800 dark:text-surface-200 cursor-default">
               Say hello
-              <svg id="say-hello-arrow" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
               </svg>
             </span>
@@ -383,24 +391,6 @@
       if (e.key === 'Escape') closeDropdown();
     });
 
-    // Magnetic Say Hello
-    const sayHelloBtn = document.getElementById('say-hello-btn');
-    const sayHelloArrow = document.getElementById('say-hello-arrow');
-
-    sayHelloBtn.addEventListener('mousemove', (e) => {
-      const rect = sayHelloBtn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) * 0.4;
-      const dy = (e.clientY - cy) * 0.4;
-      sayHelloBtn.style.transform = `translate(${dx}px, ${dy}px)`;
-      sayHelloArrow.style.transform = `translateX(${Math.max(dx * 0.3, 0)}px)`;
-    });
-
-    sayHelloBtn.addEventListener('mouseleave', () => {
-      sayHelloBtn.style.transform = 'translate(0, 0)';
-      sayHelloArrow.style.transform = 'translateX(0)';
-    });
   </script>
 
 </body>
