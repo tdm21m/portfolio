@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Preview — Tanner Moehle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&family=DM+Sans:wght@300;400;500;700&family=Sora:wght@300;400;500;700;800&family=Instrument+Sans:wght@300;400;500;700&family=Hanken+Grotesk:wght@300;400;500;700;800&family=Nimbus+Sans:wght@300;400;700&family=Inter:wght@300;400;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background":         "#0F0F0F",
+            "surface":            "#1A1A1A",
+            "primary":            "#FF4400",
+            "on-surface":         "#F2F2F2",
+            "on-surface-variant": "#A1A1A1",
+          },
+          borderRadius: {
+            "DEFAULT": "0px", "sm": "0px", "md": "0px",
+            "lg": "0px", "xl": "0px", "2xl": "0px", "full": "9999px"
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    body { background: #0F0F0F; color: #F2F2F2; -webkit-font-smoothing: antialiased; }
+
+    .font-jakarta  { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-dm       { font-family: 'DM Sans', sans-serif; }
+    .font-sora     { font-family: 'Sora', sans-serif; }
+    .font-instrument { font-family: 'Instrument Sans', sans-serif; }
+    .font-inter    { font-family: 'Inter', sans-serif; }
+    .font-helvetica  { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    .font-hanken     { font-family: 'Hanken Grotesk', sans-serif; }
+    .font-nimbus     { font-family: 'Nimbus Sans', sans-serif; }
+
+    .blink { animation: blink 1.1s step-start infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .project-rule {
+      height: 1px;
+      background: #FF4400;
+      width: 32px;
+      transition: width 0.4s ease;
+    }
+
+    .picker-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 10px 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #A1A1A1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .picker-btn:hover { color: #F2F2F2; border-color: rgba(255,255,255,0.4); }
+    .picker-btn.active { color: #FF4400; border-color: #FF4400; background: rgba(255,68,0,0.08); }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 0;
+    }
+
+    /* Nav styling */
+    .nav-label {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #A1A1A1;
+    }
+    .wordmark {
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #F2F2F2;
+    }
+  </style>
+</head>
+<body class="dark">
+
+  <!-- ── Sticky Font Picker ── -->
+  <div style="position:sticky;top:0;z-index:100;background:#0F0F0F;border-bottom:1px solid rgba(255,255,255,0.06);padding:16px 48px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#A1A1A1;font-weight:600;margin-right:8px;">Font Preview</span>
+    <button class="picker-btn active" onclick="setFont('jakarta', this)">Plus Jakarta Sans</button>
+    <button class="picker-btn" onclick="setFont('dm', this)">DM Sans</button>
+    <button class="picker-btn" onclick="setFont('sora', this)">Sora</button>
+    <button class="picker-btn" onclick="setFont('instrument', this)">Instrument Sans</button>
+    <button class="picker-btn" onclick="setFont('helvetica', this)">Helvetica Neue</button>
+    <button class="picker-btn" onclick="setFont('hanken', this)">Hanken Grotesk</button>
+    <button class="picker-btn" onclick="setFont('nimbus', this)">Nimbus Sans</button>
+    <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.2);margin-left:auto;text-transform:uppercase;">← click to switch</span>
+  </div>
+
+  <!-- ── Preview Container ── -->
+  <div id="preview" class="font-jakarta">
+
+    <!-- NAV -->
+    <nav style="border-bottom:1px solid rgba(255,255,255,0.05);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;">
+      <span class="wordmark">T. Moehle</span>
+      <div style="display:flex;align-items:center;gap:8px;" class="nav-label">
+        Case Files
+        <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+      <svg style="width:18px;height:18px;color:#A1A1A1;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+    </nav>
+
+    <!-- HERO -->
+    <section style="padding:80px 48px 64px;border-left:4px solid #FF4400;margin:48px 48px 0;border-bottom:none;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:48px;flex-wrap:wrap;">
+        <div>
+          <span style="font-size:10px;letter-spacing:0.4em;text-transform:uppercase;font-weight:700;color:#FF4400;display:block;margin-bottom:20px;">Senior Product Designer // v.2026</span>
+          <h1 style="font-size:clamp(64px,8vw,96px);font-weight:800;line-height:0.85;letter-spacing:-0.03em;text-transform:uppercase;color:#F2F2F2;">
+            CASE<br>FILES<span style="color:#FF4400;" class="blink">_</span>
+          </h1>
+        </div>
+        <div style="max-width:280px;margin-top:auto;text-align:right;">
+          <p style="font-family:'Inter',sans-serif;font-size:14px;color:#A1A1A1;line-height:1.7;">
+            20+ years of design — from early-stage startups to products used by hundreds of millions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" style="margin:48px 0 0;">
+
+    <!-- PROJECT CARD MOCKUP -->
+    <section style="padding:64px 48px;">
+
+      <!-- Card title area -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;">
+          <h3 style="font-size:30px;font-weight:700;letter-spacing:-0.01em;text-transform:uppercase;color:#F2F2F2;">Teams — Notifications</h3>
+          <div class="project-rule" style="margin:16px 0;"></div>
+          <div style="display:flex;gap:48px;margin-top:8px;">
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:9px;color:#FF4400;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;">Role</span>
+              <span style="font-family:'Inter',sans-serif;font-size:11px;color:#A1A1A1;text-transform:uppercase;margin-top:4px;">Senior Designer</span>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:9px;color:#FF4400;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;">Timeline</span>
+              <span style="font-family:'Inter',sans-serif;font-size:11px;color:#A1A1A1;text-transform:uppercase;margin-top:4px;">2021—2022</span>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:9px;color:#FF4400;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;">Scale</span>
+              <span style="font-family:'Inter',sans-serif;font-size:11px;color:#A1A1A1;text-transform:uppercase;margin-top:4px;">280M Users</span>
+            </div>
+          </div>
+        </div>
+        <div style="width:56px;height:56px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:32px;">
+          <span class="material-symbols-outlined" style="color:#F2F2F2;font-size:20px;">arrow_forward</span>
+        </div>
+      </div>
+
+      <hr class="section-divider" style="margin:48px 0;">
+
+      <!-- Second card -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="flex:1;">
+          <h3 style="font-size:30px;font-weight:700;letter-spacing:-0.01em;text-transform:uppercase;color:#F2F2F2;">Teams — Together Mode</h3>
+          <div class="project-rule" style="margin:16px 0;"></div>
+          <div style="display:flex;gap:48px;margin-top:8px;">
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:9px;color:#FF4400;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;">Role</span>
+              <span style="font-family:'Inter',sans-serif;font-size:11px;color:#A1A1A1;text-transform:uppercase;margin-top:4px;">Senior Designer</span>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:9px;color:#FF4400;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;">Timeline</span>
+              <span style="font-family:'Inter',sans-serif;font-size:11px;color:#A1A1A1;text-transform:uppercase;margin-top:4px;">2020—2021</span>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:9px;color:#FF4400;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;">Scale</span>
+              <span style="font-family:'Inter',sans-serif;font-size:11px;color:#A1A1A1;text-transform:uppercase;margin-top:4px;">280M Users</span>
+            </div>
+          </div>
+        </div>
+        <div style="width:56px;height:56px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:32px;">
+          <span class="material-symbols-outlined" style="color:#F2F2F2;font-size:20px;">arrow_forward</span>
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- FOOTER STRIP -->
+    <div style="padding:32px 48px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#A1A1A1;">© 2026 Tanner Moehle — All Rights Reserved</span>
+      <div style="display:flex;gap:32px;">
+        <span style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#A1A1A1;font-weight:700;">LinkedIn</span>
+        <span style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#A1A1A1;font-weight:700;">Email</span>
+      </div>
+    </div>
+
+  </div><!-- /preview -->
+
+  <!-- ── Font label overlay ── -->
+  <div id="font-label" style="position:fixed;bottom:28px;right:36px;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.3);">
+    Plus Jakarta Sans
+  </div>
+
+  <script>
+    const fonts = {
+      jakarta:    { cls: 'font-jakarta',    label: 'Plus Jakarta Sans' },
+      dm:         { cls: 'font-dm',         label: 'DM Sans' },
+      sora:       { cls: 'font-sora',       label: 'Sora' },
+      instrument: { cls: 'font-instrument', label: 'Instrument Sans' },
+      helvetica:  { cls: 'font-helvetica',  label: 'Helvetica Neue' },
+      hanken:     { cls: 'font-hanken',     label: 'Hanken Grotesk' },
+      nimbus:     { cls: 'font-nimbus',     label: 'Nimbus Sans' },
+    };
+
+    function setFont(key, btn) {
+      const preview = document.getElementById('preview');
+      const label   = document.getElementById('font-label');
+      // Remove all font classes
+      Object.values(fonts).forEach(f => preview.classList.remove(f.cls));
+      preview.classList.add(fonts[key].cls);
+      label.textContent = fonts[key].label;
+      // Update buttons
+      document.querySelectorAll('.picker-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
