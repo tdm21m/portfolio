@@ -56,10 +56,17 @@
     opacity: 1;
   }
 
-  /* Project media — no grayscale, only transform transition for 3D tilt */
+  /* Project media — grayscale → color on parent hover */
   .media-wrap video,
   .media-wrap img {
-    transition: transform 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: grayscale(1);
+    opacity: 0.65;
+    transition: filter 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .archive-item:hover .media-wrap video,
+  .archive-item:hover .media-wrap img {
+    filter: grayscale(0);
+    opacity: 1;
   }
 
   /* Orange rule on hover */
@@ -93,33 +100,10 @@
   /* Selection */
   ::selection { background-color: #FF4400; color: #000; }
 
-  /* ── 3D Parallax Tilt + RGB Channel Split ──────────────────────────
-     Transform is JS-driven. Exit transition is CSS-driven (on .media-wrap).
-     RGB split uses box-shadow so it lives outside the element — never
-     touching the image/video content inside.
-  ──────────────────────────────────────────────────────────────────── */
-  .media-wrap {
-    transition:
-      transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 400ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* Disable transition while actively tracking — feels instant / physical */
-  .media-wrap.tilt-active {
-    transition: none;
-  }
-
-  /* RGB channel split: colored 1px outlines offset by JS-driven CSS vars.
-     Red channel shifts opposite to tilt; blue channel follows tilt. */
-  .archive-item:hover .media-wrap {
-    box-shadow:
-      var(--r-dx, -4px) var(--r-dy, -3px) 0 1px rgba(220, 55, 55, 0.6),
-      var(--b-dx,  4px) var(--b-dy,  3px) 0 1px rgba(55, 55, 220, 0.6);
-  }
-
   /* Respect user preference */
   @media (prefers-reduced-motion: reduce) {
-    .media-wrap, .media-wrap.tilt-active { transition: none !important; }
+    .media-wrap video,
+    .media-wrap img { transition: none !important; filter: none !important; opacity: 1 !important; }
   }
 </style>
 </head>
@@ -412,50 +396,6 @@
     if (e.key === 'Escape') closeDropdown();
   });
 
-  // ── 3D Parallax Tilt + RGB Channel Split ──────────────────────────
-  // Tracks mouse position over each archive item, applies perspective
-  // tilt to the media-wrap, and drives the RGB split via CSS variables.
-  // The actual image/video is untouched — split is purely box-shadow.
-  // ──────────────────────────────────────────────────────────────────
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('.archive-item').forEach(item => {
-      const media = item.querySelector('.media-wrap');
-      if (!media) return;
-
-      item.addEventListener('mouseenter', () => {
-        media.classList.add('tilt-active'); // disable transition → instant tracking
-      });
-
-      item.addEventListener('mousemove', (e) => {
-        const rect = media.getBoundingClientRect();
-        // Normalize to -1 → 1 relative to element center
-        const nx = ((e.clientX - rect.left)  / rect.width  - 0.5) * 2;
-        const ny = ((e.clientY - rect.top)   / rect.height - 0.5) * 2;
-
-        // Tilt: max ±4° — subtle on wide panels, but readable
-        media.style.transform =
-          `perspective(1400px) rotateX(${ny * -4}deg) rotateY(${nx * 4}deg)`;
-
-        // RGB offsets: red moves against the tilt, blue follows it
-        const px = 6;
-        media.style.setProperty('--r-dx', `${nx * -px}px`);
-        media.style.setProperty('--r-dy', `${ny * -px}px`);
-        media.style.setProperty('--b-dx', `${nx *  px}px`);
-        media.style.setProperty('--b-dy', `${ny *  px}px`);
-      });
-
-      item.addEventListener('mouseleave', () => {
-        // Zero out the offsets while transition is still disabled so the
-        // shadow doesn't "jump" to its fallback value on re-enable.
-        media.style.setProperty('--r-dx', '0px');
-        media.style.setProperty('--r-dy', '0px');
-        media.style.setProperty('--b-dx', '0px');
-        media.style.setProperty('--b-dy', '0px');
-        media.classList.remove('tilt-active'); // re-enable CSS transition
-        media.style.transform = '';            // animate back to flat
-      });
-    });
-  }
 </script>
 </body>
 </html>
