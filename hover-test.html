@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Header Image Hover Effects — Test Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF4400',
+            background: '#0F0F0F',
+            surface: '#1A1A1A',
+            'on-surface': '#F2F2F2',
+            'on-surface-variant': '#A1A1A1',
+          },
+          fontFamily: {
+            headline: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+            body: ['Inter'],
+          },
+          borderRadius: { DEFAULT: '0px', lg: '0px', xl: '0px', full: '9999px' },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0F0F0F;
+      color: #F2F2F2;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background-color: #FF4400; color: #000; }
+
+    /* ─── Shared image base ─── */
+    .effect-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* ════════════════════════════════
+       1. SCALE + ORANGE GLOW
+    ════════════════════════════════ */
+    .fx-scale-glow .effect-img {
+      transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+                  filter 500ms ease;
+    }
+    .fx-scale-glow:hover .effect-img {
+      transform: scale(1.03);
+      filter: drop-shadow(0 0 40px rgba(255, 68, 0, 0.45))
+              drop-shadow(0 0 80px rgba(255, 68, 0, 0.2));
+    }
+
+    /* ════════════════════════════════
+       2. RGB CHANNEL SPLIT
+    ════════════════════════════════ */
+    .fx-rgb {
+      position: relative;
+    }
+    .fx-rgb .effect-img {
+      position: relative;
+      z-index: 1;
+      transition: opacity 200ms ease;
+    }
+    .fx-rgb .rgb-r,
+    .fx-rgb .rgb-b {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 200ms ease, transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .fx-rgb .rgb-r {
+      mix-blend-mode: screen;
+      filter: url(#red-channel);
+    }
+    .fx-rgb .rgb-b {
+      mix-blend-mode: screen;
+      filter: url(#blue-channel);
+    }
+    .fx-rgb:hover .rgb-r {
+      opacity: 0.7;
+      transform: translateX(-5px) translateY(-2px);
+    }
+    .fx-rgb:hover .rgb-b {
+      opacity: 0.7;
+      transform: translateX(5px) translateY(2px);
+    }
+
+    /* ════════════════════════════════
+       3. GLITCH
+    ════════════════════════════════ */
+    .fx-glitch {
+      position: relative;
+      overflow: hidden;
+    }
+    .fx-glitch .effect-img {
+      position: relative;
+      z-index: 1;
+    }
+    .fx-glitch::before,
+    .fx-glitch::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--glitch-bg);
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      opacity: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .fx-glitch::before {
+      filter: hue-rotate(90deg) saturate(4);
+      mix-blend-mode: screen;
+    }
+    .fx-glitch::after {
+      filter: hue-rotate(200deg) saturate(4);
+      mix-blend-mode: screen;
+    }
+    .fx-glitch:hover::before {
+      animation: glitch-before 0.5s steps(1, end) infinite;
+    }
+    .fx-glitch:hover::after {
+      animation: glitch-after 0.5s steps(1, end) infinite;
+    }
+    @keyframes glitch-before {
+      0%   { opacity: 0; transform: translateX(0); clip-path: inset(10% 0 75% 0); }
+      20%  { opacity: 0.8; transform: translateX(-6px); clip-path: inset(30% 0 50% 0); }
+      40%  { opacity: 0; transform: translateX(4px); clip-path: inset(60% 0 20% 0); }
+      60%  { opacity: 0.6; transform: translateX(-3px); clip-path: inset(5% 0 80% 0); }
+      80%  { opacity: 0; }
+      100% { opacity: 0; transform: translateX(0); }
+    }
+    @keyframes glitch-after {
+      0%   { opacity: 0; transform: translateX(0); clip-path: inset(50% 0 30% 0); }
+      25%  { opacity: 0.7; transform: translateX(5px); clip-path: inset(70% 0 10% 0); }
+      50%  { opacity: 0; transform: translateX(-4px); clip-path: inset(20% 0 65% 0); }
+      75%  { opacity: 0.5; transform: translateX(2px); clip-path: inset(85% 0 5% 0); }
+      100% { opacity: 0; transform: translateX(0); }
+    }
+
+    /* ════════════════════════════════
+       4. SCAN LINE REVEAL
+    ════════════════════════════════ */
+    .fx-scan {
+      position: relative;
+      overflow: hidden;
+    }
+    .fx-scan .effect-img {
+      filter: grayscale(1) brightness(0.6);
+      transition: filter 600ms ease;
+    }
+    .fx-scan:hover .effect-img {
+      filter: grayscale(0) brightness(1);
+      transition: filter 600ms ease 400ms;
+    }
+    .fx-scan .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #FF4400 20%, #FF4400 80%, transparent);
+      top: -4px;
+      opacity: 0;
+      box-shadow: 0 0 12px 4px rgba(255, 68, 0, 0.6);
+      z-index: 3;
+      pointer-events: none;
+    }
+    .fx-scan:hover .scan-line {
+      opacity: 1;
+      animation: scan-down 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes scan-down {
+      from { top: -4px; }
+      to   { top: 105%; }
+    }
+
+    /* ════════════════════════════════
+       5. 3D PARALLAX TILT
+    ════════════════════════════════ */
+    .fx-tilt-wrap {
+      perspective: 800px;
+    }
+    .fx-tilt {
+      transform-style: preserve-3d;
+      transition: transform 80ms linear, box-shadow 300ms ease;
+      will-change: transform;
+    }
+    .fx-tilt:hover {
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.5),
+        0 0 40px rgba(255,68,0,0.12);
+    }
+    .fx-tilt .effect-img {
+      transform: translateZ(20px);
+      transition: transform 80ms linear;
+      pointer-events: none;
+    }
+
+    /* ════════════════════════════════
+       6. CLIP-PATH WIPE + INVERT FLASH
+    ════════════════════════════════ */
+    .fx-wipe {
+      position: relative;
+      overflow: hidden;
+    }
+    .fx-wipe .effect-img {
+      position: relative;
+      z-index: 1;
+      transition: filter 300ms ease;
+    }
+    .fx-wipe:hover .effect-img {
+      filter: brightness(1.1);
+    }
+    .fx-wipe .wipe-overlay {
+      position: absolute;
+      inset: 0;
+      background: #FF4400;
+      mix-blend-mode: color-dodge;
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      transition:
+        clip-path 400ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 100ms ease;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .fx-wipe:hover .wipe-overlay {
+      clip-path: inset(0 0% 0 0);
+      opacity: 0.15;
+      transition:
+        clip-path 500ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 200ms ease 100ms;
+    }
+
+    /* ─── Shared card chrome ─── */
+    .effect-card {
+      background: #1A1A1A;
+      border: 1px solid rgba(255,255,255,0.07);
+      overflow: hidden;
+    }
+
+    /* ─── Back link ─── */
+    .back-link {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #A1A1A1;
+      text-decoration: none;
+      transition: color 200ms ease;
+    }
+    .back-link:hover { color: #FF4400; }
+
+    /* ─── Label badge ─── */
+    .effect-label {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #FF4400;
+    }
+    .effect-name {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #F2F2F2;
+    }
+    .effect-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #A1A1A1;
+      line-height: 1.6;
+    }
+    .effect-hint {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: rgba(255,255,255,0.25);
+    }
+  </style>
+
+  <!-- SVG filters for RGB split -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <filter id="red-channel">
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/>
+      </filter>
+      <filter id="blue-channel">
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+      </filter>
+    </defs>
+  </svg>
+</head>
+
+<body class="font-body">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full z-50 bg-[#0F0F0F]/90 backdrop-blur-md border-b border-white/5">
+    <div class="flex justify-between items-center px-8 md:px-12 py-7">
+      <a href="index.html" class="back-link">← Back to Site</a>
+      <span style="font-family:'Helvetica Neue',sans-serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;font-weight:700;color:#FF4400;">
+        Header Hover Effects // Test Page
+      </span>
+      <a href="index.html" class="back-link" style="font-family:'Helvetica Neue',sans-serif;font-size:10px;letter-spacing:0.2em;font-weight:700;color:#A1A1A1;">
+        T. MOEHLE
+      </a>
+    </div>
+  </nav>
+
+  <main class="pt-32 pb-32 px-8 md:px-12 max-w-[1200px] mx-auto">
+
+    <!-- Page header -->
+    <header class="mb-24">
+      <p class="effect-label mb-3">Interaction Lab</p>
+      <h1 style="font-family:'Helvetica Neue',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;color:#F2F2F2;margin-bottom:1.5rem;">
+        Header Image<br>Hover Effects
+      </h1>
+      <p class="effect-desc max-w-xl">
+        Six distinct treatments for the <code style="background:#1A1A1A;padding:2px 6px;font-size:12px;color:#FF4400;">title.png</code> header image.
+        Hover each card to preview. Pick your favourite — or mix elements from several.
+      </p>
+    </header>
+
+    <!-- Grid of 6 effects -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- ─── 01 · Scale + Orange Glow ─── -->
+      <div>
+        <div class="effect-card cursor-pointer fx-scale-glow">
+          <div style="padding: 2rem;">
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt="Tanner Moehle"
+              class="effect-img"
+            />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+          <div>
+            <p class="effect-label" style="margin-bottom:0.25rem;">01</p>
+            <p class="effect-name">Scale + Glow</p>
+            <p class="effect-desc" style="margin-top:0.4rem;max-width:340px;">
+              Subtle 3% scale-up with a warm orange drop-shadow bloom. Calm, confident — works on any background.
+            </p>
+          </div>
+          <p class="effect-hint" style="white-space:nowrap;margin-top:0.3rem;">Hover to preview →</p>
+        </div>
+      </div>
+
+      <!-- ─── 02 · RGB Channel Split ─── -->
+      <div>
+        <div class="effect-card cursor-pointer fx-rgb">
+          <div style="padding: 2rem; position:relative;">
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt="Tanner Moehle"
+              class="effect-img"
+            />
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt=""
+              class="rgb-r effect-img"
+              aria-hidden="true"
+            />
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt=""
+              class="rgb-b effect-img"
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+          <div>
+            <p class="effect-label" style="margin-bottom:0.25rem;">02</p>
+            <p class="effect-name">RGB Channel Split</p>
+            <p class="effect-desc" style="margin-top:0.4rem;max-width:340px;">
+              Red and blue channels offset in opposite directions on hover, creating a chromatic aberration effect.
+            </p>
+          </div>
+          <p class="effect-hint" style="white-space:nowrap;margin-top:0.3rem;">Hover to preview →</p>
+        </div>
+      </div>
+
+      <!-- ─── 03 · Glitch ─── -->
+      <div>
+        <div
+          class="effect-card cursor-pointer fx-glitch"
+          style="--glitch-bg: url('https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png');"
+        >
+          <div style="padding: 2rem;">
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt="Tanner Moehle"
+              class="effect-img"
+            />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+          <div>
+            <p class="effect-label" style="margin-bottom:0.25rem;">03</p>
+            <p class="effect-name">Glitch</p>
+            <p class="effect-desc" style="margin-top:0.4rem;max-width:340px;">
+              Animated horizontal slice corruption with color-shifted duplicate layers. Aggressive and editorial.
+            </p>
+          </div>
+          <p class="effect-hint" style="white-space:nowrap;margin-top:0.3rem;">Hover to preview →</p>
+        </div>
+      </div>
+
+      <!-- ─── 04 · Scan Line Reveal ─── -->
+      <div>
+        <div class="effect-card cursor-pointer fx-scan">
+          <div style="padding: 2rem; position:relative;">
+            <div class="scan-line"></div>
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt="Tanner Moehle"
+              class="effect-img"
+            />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+          <div>
+            <p class="effect-label" style="margin-bottom:0.25rem;">04</p>
+            <p class="effect-name">Scan Line Reveal</p>
+            <p class="effect-desc" style="margin-top:0.4rem;max-width:340px;">
+              Image starts desaturated. An orange scan line sweeps down, then the image fades fully to color. Cinematic and technical.
+            </p>
+          </div>
+          <p class="effect-hint" style="white-space:nowrap;margin-top:0.3rem;">Hover to preview →</p>
+        </div>
+      </div>
+
+      <!-- ─── 05 · 3D Parallax Tilt ─── -->
+      <div>
+        <div class="effect-card cursor-pointer fx-tilt-wrap">
+          <div class="fx-tilt" id="tilt-card" style="padding: 2rem;">
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt="Tanner Moehle"
+              class="effect-img"
+            />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+          <div>
+            <p class="effect-label" style="margin-bottom:0.25rem;">05</p>
+            <p class="effect-name">3D Parallax Tilt</p>
+            <p class="effect-desc" style="margin-top:0.4rem;max-width:340px;">
+              The card tilts in 3D space following your cursor, with an orange shadow on the elevated side. Premium and spatial.
+            </p>
+          </div>
+          <p class="effect-hint" style="white-space:nowrap;margin-top:0.3rem;">Move cursor →</p>
+        </div>
+      </div>
+
+      <!-- ─── 06 · Clip-Path Wipe ─── -->
+      <div>
+        <div class="effect-card cursor-pointer fx-wipe">
+          <div style="padding: 2rem; position:relative;">
+            <div class="wipe-overlay"></div>
+            <img
+              src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+              alt="Tanner Moehle"
+              class="effect-img"
+            />
+          </div>
+        </div>
+        <div style="margin-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+          <div>
+            <p class="effect-label" style="margin-bottom:0.25rem;">06</p>
+            <p class="effect-name">Wipe Wash</p>
+            <p class="effect-desc" style="margin-top:0.4rem;max-width:340px;">
+              An orange color-dodge wash sweeps left-to-right across the image on hover. Energetic and brand-forward.
+            </p>
+          </div>
+          <p class="effect-hint" style="white-space:nowrap;margin-top:0.3rem;">Hover to preview →</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer note -->
+    <div style="margin-top:6rem;padding-top:3rem;border-top:1px solid rgba(255,255,255,0.07);">
+      <p class="effect-desc">
+        Tell me which effect (or combination) you'd like applied to the live homepage —
+        I'll integrate it into <code style="background:#1A1A1A;padding:2px 6px;font-size:12px;color:#FF4400;">index.html</code> with the appropriate
+        accessibility and reduced-motion support.
+      </p>
+      <a href="index.html" class="back-link" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1.5rem;">
+        ← Back to live site
+      </a>
+    </div>
+
+  </main>
+
+  <script>
+    // ── 3D Tilt (Effect 05) ──
+    const tiltCard = document.getElementById('tilt-card');
+    const tiltWrap = tiltCard.parentElement;
+
+    tiltWrap.addEventListener('mousemove', (e) => {
+      const rect = tiltWrap.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;   // 0→1
+      const y = (e.clientY - rect.top)  / rect.height;  // 0→1
+      const rotX = (y - 0.5) * -14;  // degrees
+      const rotY = (x - 0.5) *  14;
+      tiltCard.style.transform =
+        `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      tiltCard.style.boxShadow =
+        `${-rotY * 2}px ${rotX * 2}px 50px rgba(255,68,0,0.15), 0 20px 60px rgba(0,0,0,0.4)`;
+    });
+
+    tiltWrap.addEventListener('mouseleave', () => {
+      tiltCard.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg)';
+      tiltCard.style.boxShadow = 'none';
+      tiltCard.style.transition = 'transform 400ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 400ms ease';
+      setTimeout(() => { tiltCard.style.transition = ''; }, 420);
+    });
+
+    // ── Scan line re-trigger on re-hover ──
+    document.querySelectorAll('.fx-scan').forEach(card => {
+      card.addEventListener('mouseleave', () => {
+        const line = card.querySelector('.scan-line');
+        line.style.animation = 'none';
+        line.offsetHeight; // reflow
+        line.style.animation = '';
+      });
+    });
+
+    // ── Reduced motion: strip all effects ──
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.fx-scale-glow .effect-img, .fx-rgb .effect-img, .fx-wipe .effect-img')
+        .forEach(el => el.style.transition = 'none');
+    }
+  </script>
+
+</body>
+</html>
