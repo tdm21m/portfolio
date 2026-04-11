@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nav Variations — Back Button Study</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF4400',
+            background: '#0F0F0F',
+            surface: '#1A1A1A',
+            'on-surface': '#F2F2F2',
+            'on-surface-variant': '#A1A1A1',
+            outline: '#2A2A2A',
+          },
+          fontFamily: {
+            headline: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+            body: ['Inter'],
+          },
+          borderRadius: { DEFAULT: '0px', lg: '0px', xl: '0px', full: '9999px' },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0F0F0F;
+      color: #F2F2F2;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background-color: #FF4400; color: #000; }
+
+    /* ── Shared nav chrome ── */
+    .nav-chrome {
+      background: rgba(26, 26, 26, 0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+    }
+
+    /* ── Theme toggle button ── */
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #A1A1A1;
+      transition: color 200ms ease;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .theme-btn:hover { color: #F2F2F2; }
+
+    .icon-sun { display: none; }
+    .icon-moon { display: block; }
+    .is-light .icon-sun { display: block; }
+    .is-light .icon-moon { display: none; }
+
+    /* ── Back arrow link ── */
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #A1A1A1;
+      text-decoration: none;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 180ms ease;
+    }
+    .back-link:hover { color: #F2F2F2; }
+
+    /* ── Dropdown ── */
+    .dd-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #A1A1A1;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 180ms ease;
+    }
+    .dd-trigger:hover { color: #F2F2F2; }
+
+    /* ── Mail icon ── */
+    .mail-link {
+      color: #FF4400;
+      display: flex;
+      align-items: center;
+      transition: transform 200ms ease, opacity 200ms ease;
+      text-decoration: none;
+    }
+    .mail-link:hover { transform: scale(1.1); }
+    .mail-link svg { width: 20px; height: 20px; }
+
+    /* ── Simulated content backdrop ── */
+    .content-sim {
+      background: #0F0F0F;
+      position: relative;
+      overflow: hidden;
+    }
+    .content-sim::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(255,255,255,0.025) 39px,
+        rgba(255,255,255,0.025) 40px
+      );
+      pointer-events: none;
+    }
+
+    /* ── Breadcrumb style ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .breadcrumb-home {
+      color: #A1A1A1;
+      cursor: pointer;
+      transition: color 180ms ease;
+      text-decoration: none;
+    }
+    .breadcrumb-home:hover { color: #FF4400; }
+    .breadcrumb-sep { color: rgba(255,255,255,0.15); }
+    .breadcrumb-current { color: #F2F2F2; }
+
+    /* ── Floating pill ── */
+    .float-pill {
+      position: absolute;
+      bottom: 16px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(26, 26, 26, 0.92);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      padding: 8px 14px 8px 10px;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #A1A1A1;
+      cursor: pointer;
+      transition: color 180ms ease, border-color 180ms ease;
+      border-radius: 100px;
+    }
+    .float-pill:hover { color: #F2F2F2; border-color: rgba(255,255,255,0.18); }
+
+    /* ── In-content back ── */
+    .content-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #FF4400;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 180ms ease;
+    }
+    .content-back:hover { opacity: 0.7; }
+
+    /* ── Paired icons ── */
+    .icon-pair {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .icon-pair-divider {
+      width: 1px;
+      height: 14px;
+      background: rgba(255,255,255,0.1);
+      margin: 0 6px;
+    }
+
+    /* ── Section label ── */
+    .variation-label {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #FF4400;
+    }
+
+    /* ── Verdict pill ── */
+    .verdict {
+      display: inline-block;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .verdict-strong { background: rgba(255,68,0,0.15); color: #FF4400; border: 1px solid rgba(255,68,0,0.3); }
+    .verdict-good { background: rgba(100,200,100,0.1); color: #7ec87e; border: 1px solid rgba(100,200,100,0.2); }
+    .verdict-caution { background: rgba(255,200,50,0.1); color: #f0c040; border: 1px solid rgba(255,200,50,0.2); }
+
+    /* Home page nav preview */
+    .home-nav-preview {
+      background: rgba(26,26,26,0.7);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 0;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+    .home-nav-label {
+      font-size: 9px;
+      font-family: 'Helvetica Neue', sans-serif;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+
+<body class="font-body min-h-screen">
+
+  <!-- ── Page Header ── -->
+  <header class="border-b border-white/5 px-8 md:px-12 py-8 mb-16">
+    <a href="index.html" class="back-link mb-6 inline-flex">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Index
+    </a>
+    <div class="mt-8">
+      <p class="variation-label mb-3">Navigation Study</p>
+      <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tight text-on-surface uppercase mb-4">Back Button — 5 Variations</h1>
+      <p class="font-body text-sm text-on-surface-variant max-w-xl leading-relaxed">
+        The home page nav will replace "A Catalogue of Work" with the sun/moon toggle. These five variations explore how project pages handle the back button alongside that toggle — each with different tradeoffs in balance, clarity, and feel.
+      </p>
+    </div>
+
+    <!-- Context: Home page reference nav -->
+    <div class="mt-10 max-w-3xl">
+      <p class="home-nav-label">Home page nav — new state (consistent across all 5 variations)</p>
+      <div class="home-nav-preview nav-chrome">
+        <!-- Theme toggle LEFT (replaces "A Catalogue of Work") -->
+        <button class="theme-btn" aria-label="Toggle theme">
+          <svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+          <svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" stroke-width="1.5"/>
+            <path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+
+        <!-- Center: Case Files dropdown -->
+        <button class="dd-trigger">
+          <span>Case Files</span>
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Right: Mail icon (unchanged) -->
+        <a class="mail-link" href="mailto:tmoehle@mac.com" aria-label="Email">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       VARIATION 01 — Theme Left, Back Right
+  ══════════════════════════════════════════════════════ -->
+  <section class="px-8 md:px-12 mb-24">
+    <div class="max-w-3xl">
+      <p class="variation-label mb-3">01 / 05</p>
+      <h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface uppercase mb-2">Back Moves to Right</h2>
+      <p class="font-body text-sm text-on-surface-variant mb-2 leading-relaxed">
+        Theme toggle stays left (matching home page). The back link replaces the mail icon on the right — displayed as a minimal arrow icon only. Structurally mirrors the home page perfectly.
+      </p>
+      <div class="flex gap-3 mb-8">
+        <span class="verdict verdict-strong">Best symmetry</span>
+        <span class="verdict verdict-good">Consistent theme position</span>
+        <span class="verdict verdict-caution">Back on right = less habitual</span>
+      </div>
+
+      <!-- Home page ref -->
+      <p class="home-nav-label">Home page</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn v1-toggle-home" aria-label="Toggle theme">
+          <svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+        <button class="dd-trigger"><span>Case Files</span><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <!-- Project page -->
+      <p class="home-nav-label">Project page</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-4">
+        <button class="theme-btn v1-toggle-proj" aria-label="Toggle theme">
+          <svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+        <button class="dd-trigger">
+          <span class="w-2 h-2 rounded-full inline-block" style="background: linear-gradient(135deg, #4F52B2, #6264D9); flex-shrink:0;"></span>
+          <span>Microsoft Teams</span>
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- Back arrow on right -->
+        <a href="#" class="back-link" style="justify-content: flex-end;">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+      </div>
+
+      <div class="content-sim h-24 flex items-center px-6">
+        <p class="font-body text-xs text-on-surface-variant opacity-40">— project content —</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       VARIATION 02 — Back Lives in Content
+  ══════════════════════════════════════════════════════ -->
+  <section class="px-8 md:px-12 mb-24">
+    <div class="max-w-3xl">
+      <p class="variation-label mb-3">02 / 05</p>
+      <h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface uppercase mb-2">Back Lives in Content</h2>
+      <p class="font-body text-sm text-on-surface-variant mb-2 leading-relaxed">
+        The nav is identical on every page — perfectly consistent. The back navigation moves into the content area as a contextual "← Work" link above the project title. Feels editorial, not navigational overhead.
+      </p>
+      <div class="flex gap-3 mb-8">
+        <span class="verdict verdict-strong">Cleanest nav</span>
+        <span class="verdict verdict-good">100% consistent</span>
+        <span class="verdict verdict-caution">Back less prominent</span>
+      </div>
+
+      <p class="home-nav-label">Home page</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        <button class="dd-trigger"><span>Case Files</span><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <p class="home-nav-label">Project page — nav identical to home</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        <button class="dd-trigger">
+          <span class="w-2 h-2 rounded-full inline-block" style="background: linear-gradient(135deg, #4F52B2, #6264D9); flex-shrink:0;"></span>
+          <span>Microsoft Teams</span>
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <!-- Content area with back link inside -->
+      <div class="content-sim h-28 flex flex-col justify-center px-6" style="border: 1px solid rgba(255,255,255,0.04);">
+        <a class="content-back mb-2" href="#">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Work
+        </a>
+        <p class="font-headline font-bold text-xl tracking-tight text-on-surface uppercase opacity-50">Microsoft Teams — Notifications</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       VARIATION 03 — Paired Icons on Left
+  ══════════════════════════════════════════════════════ -->
+  <section class="px-8 md:px-12 mb-24">
+    <div class="max-w-3xl">
+      <p class="variation-label mb-3">03 / 05</p>
+      <h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface uppercase mb-2">Paired Icons — Back + Theme Left</h2>
+      <p class="font-body text-sm text-on-surface-variant mb-2 leading-relaxed">
+        On project pages, the back arrow and theme toggle sit side by side in the left slot, separated by a hairline divider. Both are icon-only — no text. Keeps the mail icon consistent on the right. Compact and precise.
+      </p>
+      <div class="flex gap-3 mb-8">
+        <span class="verdict verdict-good">Mail stays consistent</span>
+        <span class="verdict verdict-good">Both controls grouped</span>
+        <span class="verdict verdict-caution">Left slot heavier than home</span>
+      </div>
+
+      <p class="home-nav-label">Home page</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        <button class="dd-trigger"><span>Case Files</span><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <p class="home-nav-label">Project page — paired icons on left</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-4">
+        <!-- Paired left -->
+        <div class="icon-pair">
+          <a href="#" class="theme-btn" aria-label="Back to work" style="color: #A1A1A1;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          </a>
+          <div class="icon-pair-divider"></div>
+          <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        </div>
+
+        <button class="dd-trigger">
+          <span class="w-2 h-2 rounded-full inline-block" style="background: linear-gradient(135deg, #4F52B2, #6264D9); flex-shrink:0;"></span>
+          <span>Microsoft Teams</span>
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <div class="content-sim h-24 flex items-center px-6">
+        <p class="font-body text-xs text-on-surface-variant opacity-40">— project content —</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       VARIATION 04 — Floating Scroll-Triggered Pill
+  ══════════════════════════════════════════════════════ -->
+  <section class="px-8 md:px-12 mb-24">
+    <div class="max-w-3xl">
+      <p class="variation-label mb-3">04 / 05</p>
+      <h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface uppercase mb-2">Floating Back Pill</h2>
+      <p class="font-body text-sm text-on-surface-variant mb-2 leading-relaxed">
+        Nav is identical across all pages. After scrolling ~200px down a project page, a frosted pill floats up from the bottom-left corner: "← Work." Disappears at top. Progressive disclosure — nav stays pristine, back only appears when contextually needed.
+      </p>
+      <div class="flex gap-3 mb-8">
+        <span class="verdict verdict-strong">Most modern</span>
+        <span class="verdict verdict-strong">Perfect nav consistency</span>
+        <span class="verdict verdict-caution">Adds floating element</span>
+      </div>
+
+      <p class="home-nav-label">Home page</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        <button class="dd-trigger"><span>Case Files</span><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <p class="home-nav-label">Project page — nav same as home, pill appears on scroll</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        <button class="dd-trigger">
+          <span class="w-2 h-2 rounded-full inline-block" style="background: linear-gradient(135deg, #4F52B2, #6264D9); flex-shrink:0;"></span>
+          <span>Microsoft Teams</span>
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <!-- Content with floating pill preview -->
+      <div class="content-sim h-28 flex items-center px-6 relative" style="border: 1px solid rgba(255,255,255,0.04);">
+        <p class="font-body text-xs text-on-surface-variant opacity-40">— scroll further down the page... →</p>
+        <a href="#" class="float-pill">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Work
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       VARIATION 05 — Breadcrumb Center
+  ══════════════════════════════════════════════════════ -->
+  <section class="px-8 md:px-12 mb-32">
+    <div class="max-w-3xl">
+      <p class="variation-label mb-3">05 / 05</p>
+      <h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface uppercase mb-2">Breadcrumb Center</h2>
+      <p class="font-body text-sm text-on-surface-variant mb-2 leading-relaxed">
+        The center slot transforms into a breadcrumb trail on project pages: <span style="color: #FF4400;">Work</span> <span style="color: rgba(255,255,255,0.2);">/</span> Teams — Notifications. Clicking "Work" is the back action. No redundant back button. Most informative navigation — tells you exactly where you are and how to get back.
+      </p>
+      <div class="flex gap-3 mb-8">
+        <span class="verdict verdict-strong">Most informative</span>
+        <span class="verdict verdict-strong">Back is the breadcrumb</span>
+        <span class="verdict verdict-good">Zero extra elements</span>
+      </div>
+
+      <p class="home-nav-label">Home page</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-2">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+        <button class="dd-trigger"><span>Case Files</span><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button>
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <p class="home-nav-label">Project page — breadcrumb replaces dropdown center</p>
+      <div class="nav-chrome px-6 py-4 flex items-center justify-between mb-4">
+        <button class="theme-btn" aria-label="Toggle theme"><svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.5"/><path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+
+        <!-- Breadcrumb center -->
+        <nav class="breadcrumb" aria-label="breadcrumb">
+          <a href="#" class="breadcrumb-home">Work</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current">Teams — Notifications</span>
+        </nav>
+
+        <a class="mail-link" href="#" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></a>
+      </div>
+
+      <div class="content-sim h-24 flex items-center px-6">
+        <p class="font-body text-xs text-on-surface-variant opacity-40">— project content —</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Summary Grid ── -->
+  <section class="px-8 md:px-12 pb-24 border-t border-white/5 pt-16">
+    <p class="variation-label mb-8">Summary</p>
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-px" style="background: rgba(255,255,255,0.05);">
+      <div class="bg-[#0F0F0F] p-5">
+        <p class="font-headline text-xs font-bold text-[#FF4400] uppercase tracking-widest mb-3">01</p>
+        <p class="font-headline text-sm font-bold text-on-surface uppercase tracking-tight mb-2">Back Right</p>
+        <p class="font-body text-xs text-on-surface-variant leading-relaxed">Best visual symmetry. Unconventional back position.</p>
+      </div>
+      <div class="bg-[#0F0F0F] p-5">
+        <p class="font-headline text-xs font-bold text-[#FF4400] uppercase tracking-widest mb-3">02</p>
+        <p class="font-headline text-sm font-bold text-on-surface uppercase tracking-tight mb-2">Content Back</p>
+        <p class="font-body text-xs text-on-surface-variant leading-relaxed">Cleanest nav. Editorial feel. Back contextual not habitual.</p>
+      </div>
+      <div class="bg-[#0F0F0F] p-5">
+        <p class="font-headline text-xs font-bold text-[#FF4400] uppercase tracking-widest mb-3">03</p>
+        <p class="font-headline text-sm font-bold text-on-surface uppercase tracking-tight mb-2">Paired Icons</p>
+        <p class="font-body text-xs text-on-surface-variant leading-relaxed">Compact grouping. Mail consistent. Left slightly heavier.</p>
+      </div>
+      <div class="bg-[#0F0F0F] p-5">
+        <p class="font-headline text-xs font-bold text-[#FF4400] uppercase tracking-widest mb-3">04</p>
+        <p class="font-headline text-sm font-bold text-on-surface uppercase tracking-tight mb-2">Floating Pill</p>
+        <p class="font-body text-xs text-on-surface-variant leading-relaxed">Modern, progressive. Nav totally clean. Adds a floating layer.</p>
+      </div>
+      <div class="bg-[#0F0F0F] p-5" style="border: 1px solid rgba(255,68,0,0.25);">
+        <p class="font-headline text-xs font-bold text-[#FF4400] uppercase tracking-widest mb-3">05 ★</p>
+        <p class="font-headline text-sm font-bold text-on-surface uppercase tracking-tight mb-2">Breadcrumb</p>
+        <p class="font-body text-xs text-on-surface-variant leading-relaxed">Most informative. Back = breadcrumb. Zero added elements.</p>
+      </div>
+    </div>
+    <p class="font-body text-xs text-on-surface-variant mt-6 opacity-50">★ Recommended starting point — most information-dense with the fewest additional elements.</p>
+  </section>
+
+</body>
+</html>

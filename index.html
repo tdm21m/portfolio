@@ -108,10 +108,22 @@
 <nav class="fixed top-0 w-full z-50 bg-[#0F0F0F]/90 backdrop-blur-md border-b border-white/5">
   <div class="flex justify-between items-center w-full px-8 md:px-12 py-7 max-w-full">
 
-    <!-- Wordmark -->
-    <a href="index.html" class="font-headline font-bold text-sm tracking-[0.2em] uppercase text-on-surface hover:text-primary transition-colors">
-      A Catalogue of Work
-    </a>
+    <!-- Theme Toggle -->
+    <button
+      id="theme-toggle"
+      class="text-on-surface-variant hover:text-on-surface transition-colors"
+      aria-label="Toggle theme"
+    >
+      <!-- Moon: shown in light mode -->
+      <svg id="icon-moon" class="w-5 h-5 block" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+      </svg>
+      <!-- Sun: shown in dark mode -->
+      <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5" stroke-width="1.5"/>
+        <path stroke-width="1.5" stroke-linecap="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    </button>
 
     <!-- Project Dropdown -->
     <div class="relative" id="project-dropdown">
@@ -393,6 +405,42 @@
     if (e.key === 'Escape') closeDropdown();
   });
 
+</script>
+
+<script>
+  // ── Theme Toggle ──
+  const themeToggle = document.getElementById('theme-toggle');
+  const iconMoon = document.getElementById('icon-moon');
+  const iconSun = document.getElementById('icon-sun');
+  const htmlEl = document.documentElement;
+
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+  const applyTheme = (theme) => {
+    if (theme === 'dark') {
+      htmlEl.classList.add('dark');
+      iconSun.classList.remove('hidden');
+      iconSun.classList.add('block');
+      iconMoon.classList.add('hidden');
+      iconMoon.classList.remove('block');
+    } else {
+      htmlEl.classList.remove('dark');
+      iconMoon.classList.remove('hidden');
+      iconMoon.classList.add('block');
+      iconSun.classList.add('hidden');
+      iconSun.classList.remove('block');
+    }
+    localStorage.setItem('theme', theme);
+  };
+
+  applyTheme(initialTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const current = htmlEl.classList.contains('dark') ? 'dark' : 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
 </script>
 </body>
 </html>
