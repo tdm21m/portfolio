@@ -96,6 +96,13 @@
     opacity: 1;
   }
 
+  /* Light mode — media always full color */
+  html:not(.dark) .media-wrap video,
+  html:not(.dark) .media-wrap img {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+
   /* Orange rule on hover */
   .project-rule {
     width: 0;
