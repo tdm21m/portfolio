@@ -254,10 +254,19 @@
 
   <!-- Header -->
   <header class="mb-24" id="about">
+    <!-- Light-mode title -->
     <img
-      src="https://raw.githubusercontent.com/tdm21m/portfolio/main/title.png"
+      id="title-img-light"
+      src="title_llight.png"
       alt="Tanner Moehle"
-      class="header-title-img w-full h-auto mb-12"
+      class="header-title-img w-full h-auto mb-12 transition-opacity duration-300"
+    />
+    <!-- Dark-mode title (hidden until dark theme is applied) -->
+    <img
+      id="title-img-dark"
+      src="title.png"
+      alt="Tanner Moehle"
+      class="header-title-img w-full h-auto mb-12 transition-opacity duration-300 hidden"
     />
     <p class="font-body text-2xl font-bold text-on-surface leading-relaxed tracking-tight mt-40 mb-40">
       A selection of work built with great teams. I'll tell you what I contributed and let the outcomes speak for themselves.
@@ -498,6 +507,9 @@
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 
+  const titleLight = document.getElementById('title-img-light');
+  const titleDark  = document.getElementById('title-img-dark');
+
   const applyTheme = (theme) => {
     if (theme === 'dark') {
       htmlEl.classList.add('dark');
@@ -505,12 +517,18 @@
       iconSun.classList.add('block');
       iconMoon.classList.add('hidden');
       iconMoon.classList.remove('block');
+      // Swap title image to dark version
+      if (titleLight) titleLight.classList.add('hidden');
+      if (titleDark)  titleDark.classList.remove('hidden');
     } else {
       htmlEl.classList.remove('dark');
       iconMoon.classList.remove('hidden');
       iconMoon.classList.add('block');
       iconSun.classList.add('hidden');
       iconSun.classList.remove('block');
+      // Swap title image to light version
+      if (titleDark)  titleDark.classList.add('hidden');
+      if (titleLight) titleLight.classList.remove('hidden');
     }
     localStorage.setItem('theme', theme);
   };
