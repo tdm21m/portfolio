@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+<script>
+  (function(){
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+    document.documentElement.classList.toggle('dark', saved === 'dark' || (!saved && prefersDark));
+  })();
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Together Mode — Microsoft Teams — Tanner Moehle</title>
   <meta name="description" content="Designing spatial seat assignment for Together Mode in Microsoft Teams.">
@@ -62,6 +69,36 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
+
+    /* ── Light-mode overrides ─────────────────────────────── */
+    html:not(.dark) body {
+      background-color: #FAFAF8;
+      color: #1A1A1A;
+    }
+    html:not(.dark) nav {
+      background-color: rgba(250, 250, 248, 0.95) !important;
+      border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    html:not(.dark) #dropdown-menu {
+      background-color: #FFFFFF !important;
+      border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+    html:not(.dark) [class*="text-[#F2F2F2]"] { color: #1A1A1A; }
+    html:not(.dark) [class*="text-[#f2f2f2]"] { color: #1A1A1A; }
+    html:not(.dark) [class*="text-[#A1A1A1]"] { color: #525252; }
+    html:not(.dark) [class*="text-[#a1a1a1]"] { color: #525252; }
+    html:not(.dark) .text-on-surface-variant   { color: #525252; }
+    html:not(.dark) [class*="bg-[#0F0F0F]"]    { background-color: #FAFAF8; }
+    html:not(.dark) [class*="bg-[#1A1A1A]"]    { background-color: #EEEEEC; }
+    html:not(.dark) [class*="border-white\/5"]  { border-color: rgba(0, 0, 0, 0.08); }
+    html:not(.dark) [class*="border-white\/10"] { border-color: rgba(0, 0, 0, 0.12); }
+    html:not(.dark) [class*="bg-white\/5"]      { background-color: rgba(0, 0, 0, 0.04); }
+    html:not(.dark) footer                       { background-color: #EEEEEC !important; }
+    html:not(.dark) footer [class*="text-[#A1A1A1]"] { color: #525252; }
+    html:not(.dark) #theme-toggle { color: #525252; }
+    html:not(.dark) #theme-toggle:hover { color: #1A1A1A; }
+    html:not(.dark) .next-project-link:hover { background-color: #EEEEEC !important; }
+    html:not(.dark) [class*="group-hover:text-white"] { --tw-text-opacity: 1; }
   </style>
 </head>
 
@@ -104,9 +141,17 @@
         </div>
       </div>
 
-      <a href="mailto:tmoehle@mac.com" class="flex items-center text-[#FF4400] hover:scale-110 transition-transform">
-        <span class="material-symbols-outlined">mail</span>
-      </a>
+            <button id="theme-toggle" class="flex items-center justify-center w-8 h-8 text-[#A1A1A1] hover:text-white transition-colors" aria-label="Toggle theme">
+        <!-- Sun icon: shown in dark mode -->
+        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" stroke-width="1.5"/>
+          <path stroke-linecap="round" stroke-width="1.5" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <!-- Moon icon: shown in light mode -->
+        <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+      </button>
 
     </div>
   </nav>
@@ -362,6 +407,14 @@
     dropdownTrigger.addEventListener('click', (e) => { e.stopPropagation(); isOpen ? closeDropdown() : openDropdown(); });
     document.addEventListener('click', (e) => { if (!dropdownMenu.contains(e.target) && !dropdownTrigger.contains(e.target)) closeDropdown(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDropdown(); });
+  </script>
+  <script>
+    // Theme toggle
+    const getTheme = () => localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const setTheme = (t) => { document.documentElement.classList.toggle('dark', t === 'dark'); localStorage.setItem('theme', t); };
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark');
+    });
   </script>
 </body>
 </html>
